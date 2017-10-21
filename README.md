@@ -2,12 +2,11 @@
 [![npm](https://img.shields.io/npm/dt/nuxt-generate-cluster.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/nuxt-generate-cluster/latest.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 
-> Use multiple workers to generate static files for your Nuxt.js project
+> Use multiple workers to generate the static files for your Nuxt.js project
 
 ## Setup
 - Install from npm `npm install --save nuxt-generate-cluster` or `yarn add nuxt-generate-cluster`
 - Configure the generate options in `nuxt.config.js`
-
 ```js
   generate: {
     workers: 4,
@@ -21,6 +20,14 @@
     }
   }
 ```
+
+- (Optional) Add a generate script to your `package.json`
+```js
+  "scripts": {
+    "generate": "nuxt-generate -w 4"
+  }
+```
+
 ## Nuxt config options
 
 ### `workers`
@@ -36,10 +43,10 @@ To even the load between workers they are sent batches of routes to generate, ot
 ### `routes`
 
 The default Nuxt routes method has been extended so you can pass additional parameters to it, see params parameter in example config under Setup. By default
-these will list 3 timestamps:
+it will list 3 timestamps:
 
 - `last_started`
-The unix timestamp when the nuxt-generate command was last started
+The unix timestamp when the nuxt-generate command was last executed
 
 - `last_build`
 The unix timestamp when the nuxt project was last build by nuxt-generate
@@ -67,10 +74,10 @@ $ nuxt-generate --help
       --universal        Launch in Universal mode (default)
 ```
 
-If you want to have more control which routes the `nuxt-generate` command will generate, use the `-p` option to pass additional parameters to be passed to the `nuxt.config.generate.routes` method
+If you need to have more control which routes the `nuxt-generate` command should generate, use the `-p` option to pass additional parameters to the `nuxt.config.generate.routes` method
 
 ```
-$ nuxt-generate -p id=1&id=2
+$ nuxt-generate -w 2 -p id=1&id=2
 ```
 
 ```
