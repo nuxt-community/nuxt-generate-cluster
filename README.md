@@ -1,11 +1,15 @@
 # Multi-threaded generator command for nuxt.js
 [![npm](https://img.shields.io/npm/dt/nuxt-generate-cluster.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/nuxt-generate-cluster/latest.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
+<a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-v1.0.0--rc11-800080.svg?style=flat-square" alt=""/></a>
 
 > Use multiple workers to generate the static files for your Nuxt.js project
 
 ## Setup
-- Install from npm `npm install --save nuxt-generate-cluster` or `yarn add nuxt-generate-cluster`
+- Install from npm `npm install --save nuxt-generate-cluster@1.0.0-rc11` or `yarn add nuxt-generate-cluster@1.0.0-rc11`
+
+The version of this package is in sync with nuxt's version, use the correct version as your dependency
+
 - Configure the generate options in `nuxt.config.js`
 ```js
   generate: {
