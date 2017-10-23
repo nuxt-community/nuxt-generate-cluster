@@ -1,4 +1,4 @@
-# Multi-threaded generator command for nuxt.js
+# Multi-threaded generate command for Nuxt.js
 [![npm](https://img.shields.io/npm/dt/nuxt-generate-cluster.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/nuxt-generate-cluster/latest.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 <a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-v1.0.0--rc11-800080.svg?style=flat-square" alt=""/></a>
@@ -8,7 +8,7 @@
 ## Setup
 - Install from npm `npm install --save nuxt-generate-cluster@1.0.0-rc11` or `yarn add nuxt-generate-cluster@1.0.0-rc11`
 
-The version of this package is in sync with nuxt's version, use the correct version as your dependency
+The version of this package is in sync with Nuxt's version, use the correct version as your dependency to make sure the generate command supports the latest Nuxt.js features.
 
 - Configure the generate options in `nuxt.config.js`
 ```js
@@ -37,28 +37,30 @@ The version of this package is in sync with nuxt's version, use the correct vers
 ### `workers`
 - Default: number of processors
 
-The amount of workers that should be started. It probably has no use to start more workers then number of processors in your system.
+The number of workers that should be started. It probably has no use to start more workers then number of processors in your system.
 
 ### `worker_concurrency`
 - Default: `500`
 
-To even the load between workers they are sent batches of routes to generate, otherwise a worker with 'easy' routes might finish long before others. Workers will also still use the normal concurrency option from Nuxt.
+To even the load between workers they are sent batches of routes to generate, otherwise a worker with 'easy' routes might finish long before others. Workers will also still use the concurrency option from Nuxt.
 
 ### `routes`
 
-The default Nuxt routes method has been extended so you can pass additional parameters to it, see params parameter in example config under Setup. By default
+The default [Nuxt.js routes method](https://nuxtjs.org/api/configuration-generate#routes) has been extended so you can pass additional parameters to it, see params parameter in example config under Setup. By default
 it will list 3 timestamps:
 
 - `last_started`
-The unix timestamp when the nuxt-generate command was last executed
+The unix timestamp when the nuxt-generate command was last executed, should be just now
 
-- `last_build`
-The unix timestamp when the nuxt project was last build by nuxt-generate
+- `last_built`
+The unix timestamp when the nuxt project was last built by nuxt-generate
 
 - `last_finished`
 The unix timestamp when nuxt-generate last finished succesfully (eg not interrupted by `ctrl+c`)
 
-## Nuxt-generate command options
+## Command-line options
+
+> Please note that you need to explicitly indicate with `-b` that you want to (re-)build your project
 
 ```
 $ nuxt-generate --help
@@ -73,27 +75,38 @@ $ nuxt-generate --help
       --params, -p        Extra parameters which should be passed to nuxt.config.generate.routes()
                             should be a JSON string or queryString
       --workers,-w [NUM]  How many workers should be started
-                            (default: # cpus or 1 if omitted)
+                            (default: # cpus)
       --spa              Launch in SPA mode
       --universal        Launch in Universal mode (default)
 ```
 
-If you need to have more control which routes the `nuxt-generate` command should generate, use the `-p` option to pass additional parameters to the `nuxt.config.generate.routes` method
-
-```
-$ nuxt-generate -w 2 -p id=1&id=2
-```
+If you need to have more control which routes should be generated, use the `-p` option to pass additional parameters to your routes method.
 
 ```
 # nuxt.config.js
-routes (callback, params) {
-  console.log(params)
+generate: {
+  routes (callback, params) {
+    console.log(params)
+  }
 }
 
-// => { id: [ '1', '2' ],
-//  last_started: 1508609323,
-//  last_build: 0,
-//  last_finished: 0 }
+$ nuxt-generate -w 2 -p id=1&id=2
+// will print =>
+{ id: [ '1', '2' ],
+  last_started: 1508609323,
+  last_built: 0,
+  last_finished: 0 }
+```
+
+If you are using a npm script under bash use `--` to pass the parameters to nuxt-generate instead of npm:
 
 ```
+$ npm run generate -- -p '{ "id": [1,2,3] }'
+// will print =>
+{ id: [ 1, 2, 3 ],
+  last_started: 1508786574,
+  last_built: 0,
+  last_finished: 0 }
+```
+
 
