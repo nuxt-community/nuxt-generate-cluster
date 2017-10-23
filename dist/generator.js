@@ -1,5 +1,5 @@
 /*!
- * Nuxt.js v0.1.0
+ * Nuxt-Generate-Cluster.js v1.0.0-rc11
  * Released under the MIT License.
  */
 'use strict';
@@ -322,9 +322,15 @@ class Generator extends Tapable {
           debug('Generating routes');
           generateRoutes = yield promisifyRoute(function (callback) {
             if (_this3.options.generate.routes) {
-              return _this3.options.generate.routes(callback, params);
+              const promise = _this3.options.generate.routes(callback, params);
+              if (promise instanceof Promise && typeof promise.then === 'function') {
+                return promise.then(function (routes) {
+                  callback(null, routes);
+                });
+              }
+            } else {
+              return [];
             }
-            return [];
           });
           yield _this3.applyPluginsAsync('generateRoutes', { generator: _this3, generateRoutes });
         } catch (e) {
@@ -378,7 +384,7 @@ class Generator extends Tapable {
       // Copy /index.html to /200.html for surge SPA
       // https://surge.sh/help/adding-a-200-page-for-client-side-routing
       const _200Path = path.join(_this5.distPath, '200.html');
-      if (!fsExtra.existsSync(_200Path)) {
+      if (fsExtra.existsSync(path.join(_this5.distPath, 'index.html')) && !fsExtra.existsSync(_200Path)) {
         yield fsExtra.copy(path.join(_this5.distPath, 'index.html'), _200Path);
       }
     })();
