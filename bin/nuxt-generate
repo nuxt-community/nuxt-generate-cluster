@@ -6,7 +6,7 @@ process.env.DEBUG = process.env.DEBUG || 'nuxt:*'
 const { defaults } = require('lodash')
 const fs = require('fs')
 const parseArgs = require('minimist')
-const debug = require('debug')('nuxt:generate')
+const debug = require('debug')('nuxt:generate-master')
 
 const { Nuxt, Builder } = require('nuxt')
 const { Generator } = require('../')
@@ -44,7 +44,7 @@ if (argv.help) {
       --params, -p        Extra parameters which should be passed to nuxt.config.generate.routes()
                             should be a JSON string or queryString
       --workers,-w [NUM]  How many workers should be started
-                            (default: # cpus or 1 if omitted)
+                            (default: # cpus)
       --spa              Launch in SPA mode
       --universal        Launch in Universal mode (default)
   `)
@@ -72,7 +72,11 @@ options.mode = (argv['spa'] && 'spa') || (argv['universal'] && 'universal') || o
 const nuxt = new Nuxt(options)
 
 let numWorkers = 0
-if (argv['workers'] === true || argv['workers'] === 0 || (typeof argv['workers'] === 'undefined' && nuxt.options.generate.workers === 0)) {
+if (argv['workers'] === true || 
+    argv['workers'] === 0 || 
+    (typeof argv['workers'] === 'undefined' && 
+      (nuxt.options.generate.workers === 0 || typeof(nuxt.options.generate.workers) === 'undefined')
+    )) {
   numWorkers = require('os').cpus().length
 } else if(parseInt(argv['workers'])) {
   numWorkers = parseInt(argv['workers'])
@@ -80,173 +84,162 @@ if (argv['workers'] === true || argv['workers'] === 0 || (typeof argv['workers']
   numWorkers = nuxt.options.generate.workers
 }
 
+if (numWorkers < 1) {
+  numWorkers = 1
+}
+
+const storeTime = (key, time) => {
+  timers[key] = time || Math.round(new Date().getTime()/1000)
+  store.set(timers)
+  store.save()
+}
+
 const timers = defaults({}, store.data || {}, {
   last_started: 0,
-  last_build: 0,
+  last_built: 0,
   last_finished: 0
 })
 
-if (numWorkers <= 1) {
-  const debug = require('debug')('nuxt:generate')
+const cluster = require('cluster')
+cluster.setupMaster({
+  exec: __dirname + '/nuxt-generate-worker.js'
+})
 
-  debug('Generating...')
-  const builder = new Builder(nuxt)
-  const generator = new Generator(nuxt, builder)
+debug(`master process ${process.pid} is running`)
 
-  generator.generate()
-    .then(() => {
-      debug('Generate done')
-      process.exit(0)
-    })
-    .catch((err) => {
-      console.error(err) // eslint-disable-line no-console
-      process.exit(1)
-    })
+const start = process.hrtime()
+const watchdog = {}
+let routes
 
-} else {
-  const debug = require('debug')('nuxt:generate-master')
+storeTime('last_started')
 
-  const cluster = require('cluster')
-  cluster.setupMaster({
-    exec: __dirname + '/nuxt-generate-worker.js'
-  })
+const builder = new Builder(nuxt)
+const generator = new Generator(nuxt, builder)
 
-  debug(`master process ${process.pid} is running`)
+generator.initiate({ build: argv['build'], init: argv['build'] })
+.then(() => {
+  if (!argv['build']) {
+    // TODO: when too long ago show message but what is too long?
+  } else {
+    storeTime('last_built')
+  }
 
-  const start = process.hrtime()
-  const watchdog = {}
-  let routes
+  let params
+  if (argv['params']) {
+    try {
+      params = JSON.parse(argv['params'])
+    } catch(e) {}
 
-  timers.last_started = Math.round(new Date().getTime()/1000)
-  store.set(timers)
-  store.save()
-
-  const builder = new Builder(nuxt)
-  const generator = new Generator(nuxt, builder)
-
-  generator.initiate({ build: argv['build'], init: argv['build'] })
-  .then(() => {
-    if (!argv['build']) {
-      // TODO: validate how long ago and if too long ago show message?
-    } else {
-      timers.last_build = Math.round(new Date().getTime()/1000)
-      store.set(timers)
-      store.save()
+    if (!params) {
+      params = require('querystring').parse(argv['params'])
     }
 
-    let params
-    if (argv['params']) {
-      try {
-        params = JSON.parse(argv['params'])
-      } catch(e) {}
-
-      if (!params) {
-        params = require('querystring').parse(argv['params'])
-      }
-      if (!params) {
-        debug('Could not parse params as JSON or queryString')
-      }
+    if (!params) {
+      debug('Could not parse params as JSON or queryString')
     }
-    params = defaults(params, timers)
+  }
 
-    debug(`Creating routes`)
-    generator.initRoutes(params)
-    .then((_routes) => {
-      routes = _routes
-      debug(`A total of ${routes.length} routes will be generated`)
+  params = defaults(params, timers)
 
-      for (let i = 0; i < numWorkers; i++) {
-        cluster.fork({ options: JSON.stringify(options) });
-      }
-    })
-  })
+  debug(`Creating routes`)
+  return generator.initRoutes(params)
+}).then((_routes) => {
+  routes = _routes
+  debug(`A total of ${routes.length} routes will be generated`)
 
-  cluster.on('fork', function (worker) {
-    debug(`Worker ${worker.process.pid} started`);
+  for (let i = 0; i < numWorkers; i++) {
+    cluster.fork({ options: JSON.stringify(options) })
+  }
+})
 
-    watchdog[worker.process.pid] = {
-      start: process.hrtime(),
-      duration: 0,
-      routes: 0,
-      errors: []
-    }
-  })
+// Initiate watchdog options when a new worker is started
+cluster.on('fork', function (worker) {
+  debug(`Worker ${worker.process.pid} started`);
 
-  cluster.on('message', function(worker, msg) {
-    if (msg.cmd) {
-      if (msg.cmd === 'requestRoutes') {
-        if (routes.length) {
-          // Even the load between workers
-          let worker_concurrency = options.generate.worker_concurrency
-          if (routes.length < numWorkers * options.generate.worker_concurrency) {
-            worker_concurrency = Math.ceil(routes.length / numWorkers)
-          }
+  watchdog[worker.process.pid] = {
+    start: process.hrtime(),
+    duration: 0,
+    routes: 0,
+    errors: []
+  }
+})
 
-          let worker_routes = routes.splice(0, worker_concurrency)
+// Listener for when a worker sends a message
+cluster.on('message', function(worker, msg) {
+  if (msg.cmd) {
+    if (msg.cmd === 'requestRoutes') {
+      if (routes.length) {
+        // Even the load between workers
+        let worker_concurrency = options.generate.worker_concurrency
+        if (routes.length < numWorkers * options.generate.worker_concurrency) {
+          worker_concurrency = Math.ceil(routes.length / numWorkers)
+        }
 
-          if (worker_routes.length) {
-            debug(`Sending ${worker_routes.length} routes to worker ${worker.process.pid}`)
-            watchdog[worker.process.pid].routes += worker_routes.length
+        let worker_routes = routes.splice(0, worker_concurrency)
 
-            worker.send({ cmd: msg.cmd, routes: worker_routes })
-          } else {
-            debug(`No more routes, exiting worker ${worker.process.pid}`)
-            worker.disconnect()
-          }
+        if (worker_routes.length) {
+          debug(`Sending ${worker_routes.length} routes to worker ${worker.process.pid}`)
+          watchdog[worker.process.pid].routes += worker_routes.length
+
+          worker.send({ cmd: msg.cmd, routes: worker_routes })
         } else {
           debug(`No more routes, exiting worker ${worker.process.pid}`)
           worker.disconnect()
         }
-      } else if (msg.cmd === 'errors') {
-        if (msg.errors.length) {
-          Array.prototype.push.apply(watchdog[worker.process.pid].errors, msg.errors)
-        }
+      } else {
+        debug(`No more routes, exiting worker ${worker.process.pid}`)
+        worker.disconnect()
+      }
+    } else if (msg.cmd === 'errors') {
+      if (msg.errors.length) {
+        Array.prototype.push.apply(watchdog[worker.process.pid].errors, msg.errors)
       }
     }
-  })
+  }
+})
 
-  cluster.on('exit', function(worker, code, signal) {
-    let duration = process.hrtime(watchdog[worker.process.pid].start)
-    watchdog[worker.process.pid].duration = Math.round((duration[0] * 1E9 + duration[1]) / 1E6)
+// Listener for when a worker exists
+cluster.on('exit', function(worker, code, signal) {
+  let duration = process.hrtime(watchdog[worker.process.pid].start)
+  watchdog[worker.process.pid].duration = Math.round((duration[0] * 1E9 + duration[1]) / 1E6)
 
-    let message = `Worker ${worker.process.pid} exited`
-    if (signal) {
-      message += ` by signal ${signal}`
-    } else if(code !== 0) {
-      message += ` with error code ${code}`
+  let message = `Worker ${worker.process.pid} exited`
+  if (signal) {
+    message += ` by signal ${signal}`
+  } else if(code !== 0) {
+    message += ` with error code ${code}`
+  }
+  debug(message)
+
+  let all_workers_dead = true
+  for (let pid in watchdog) {
+    if (watchdog[pid].duration === 0) {
+      all_workers_dead = false
+      break
     }
-    debug(message)
+  }
 
-    let all_workers_dead = true
+  if (all_workers_dead) {
+    // print report
+    let errors = []
     for (let pid in watchdog) {
-      if (watchdog[pid].duration === 0) {
-        all_workers_dead = false
-        break
+      let worker_msg = `Worker ${pid} generated ${watchdog[pid].routes} routes in ${Math.round(watchdog[pid].duration/100)/10}s`
+      if (watchdog[pid].errors.length) {
+        worker_msg += ` with ${watchdog[pid].errors.length} errors`
+
+        Array.prototype.push.apply(errors, watchdog[pid].errors)
       }
+      debug(worker_msg)
     }
 
-    if (all_workers_dead) {
-      // print report
-      let errors = []
-      for (let pid in watchdog) {
-        let worker_msg = `Worker ${pid} generated ${watchdog[pid].routes} routes in ${Math.round(watchdog[pid].duration/100)/10}s`
-        if (watchdog[pid].errors.length) {
-          worker_msg += ` with ${watchdog[pid].errors.length} errors`
-
-          Array.prototype.push.apply(errors, watchdog[pid].errors)
-        }
-        debug(worker_msg)
-      }
-
-      generator.postGenerate()
-
+    generator.postGenerate()
+    .then(() => {
       duration = process.hrtime(start)
       duration = Math.round((duration[0] * 1E9 + duration[1]) / 1E8)/10
 
       generator.printReport(duration, errors)
 
-      store.set('last_finished', Math.round(new Date().getTime()/1000))
-      store.save()
-    }
-  })
-}
+      storeTime('last_finished')
+    })
+  }
+})
