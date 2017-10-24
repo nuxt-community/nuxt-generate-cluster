@@ -1,3 +1,5 @@
+> :warning: Breaking change, the next release will change the configuration options and time keys from snake_case to camelCase
+
 # Multi-threaded generate command for Nuxt.js
 [![npm](https://img.shields.io/npm/dt/nuxt-generate-cluster.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/nuxt-generate-cluster/latest.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
