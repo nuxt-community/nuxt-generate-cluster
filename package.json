@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pimlie/nuxt-generate-cluster.git"
+    "url": "git+https://github.com/nuxt-community/nuxt-generate-cluster.git"
   },
   "keywords": [
     "nuxt",
@@ -20,12 +20,11 @@
   "bin": {
     "nuxt-generate": "./bin/nuxt-generate"
   },
-  "author": "pimlie",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pimlie/nuxt-generate-cluster/issues"
+    "url": "https://github.com/nuxt-community/nuxt-generate-cluster/issues"
   },
-  "homepage": "https://github.com/pimlie/nuxt-generate-cluster#readme",
+  "homepage": "https://github.com/nuxt-community/nuxt-generate-cluster#readme",
   "dependencies": {
     "cluster": "^0.7.7",
     "data-store": "^1.0.0",
