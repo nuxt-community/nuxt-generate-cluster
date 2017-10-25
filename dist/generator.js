@@ -381,11 +381,14 @@ class Generator extends Tapable {
     var _this5 = this;
 
     return asyncToGenerator(function* () {
-      // Copy /index.html to /200.html for surge SPA
-      // https://surge.sh/help/adding-a-200-page-for-client-side-routing
-      const _200Path = path.join(_this5.distPath, '200.html');
-      if (fsExtra.existsSync(path.join(_this5.distPath, 'index.html')) && !fsExtra.existsSync(_200Path)) {
-        yield fsExtra.copy(path.join(_this5.distPath, 'index.html'), _200Path);
+      const indexPath = path.join(_this5.distPath, 'index.html');
+      if (fsExtra.existsSync(indexPath)) {
+        // Copy /index.html to /200.html for surge SPA
+        // https://surge.sh/help/adding-a-200-page-for-client-side-routing
+        const _200Path = path.join(_this5.distPath, '200.html');
+        if (!fsExtra.existsSync(_200Path)) {
+          yield fsExtra.copy(indexPath, _200Path);
+        }
       }
     })();
   }
