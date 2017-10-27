@@ -10,9 +10,9 @@ test('Generate Error Nuxt.js', async t => {
     rootDir: resolve(__dirname, 'fixtures/error'),
     dev: false,
     generate: {
-      routes: [
-        '/'
-      ],
+      routes () {
+        return ['/']
+      },
       finished (info) {
         t.is(info.errors.length, 1)
         t.is(info.errors[0].type, 'unhandled')
