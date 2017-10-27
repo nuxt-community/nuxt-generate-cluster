@@ -27,11 +27,11 @@ const libDir = resolve(rootDir, 'lib')
 const distDir = resolve(rootDir, 'dist')
 
 const aliases = {
-  //core: resolve(libDir, 'core/index.js'),
-  //builder: resolve(libDir, 'builder/index.js'),
-  //common: resolve(libDir, 'common/index.js'),
-  utils: resolve(rootDir, 'node_modules/nuxt/lib/common/utils.js'),
-  //app: resolve(libDir, 'app')
+  // core: resolve(libDir, 'core/index.js'),
+  // builder: resolve(libDir, 'builder/index.js'),
+  // common: resolve(libDir, 'common/index.js'),
+  // utils: resolve(libDir, 'common/utils.js'),
+  // app: resolve(libDir, 'app')
 }
 
 // -----------------------------
