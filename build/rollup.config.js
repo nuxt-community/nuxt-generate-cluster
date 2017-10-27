@@ -15,7 +15,7 @@ const version = packageJson.version || process.env.VERSION
 // -----------------------------
 const banner =
   '/*!\n' +
-  ' * Nuxt-Generate-Cluster.js v' + version + '\n' +
+  ' * Nuxt-Generate-Cluster v' + version + '\n' +
   ' * Released under the MIT License.\n' +
   ' */'
 
@@ -27,11 +27,11 @@ const libDir = resolve(rootDir, 'lib')
 const distDir = resolve(rootDir, 'dist')
 
 const aliases = {
-  core: resolve(libDir, 'core/index.js'),
-  builder: resolve(libDir, 'builder/index.js'),
-  common: resolve(libDir, 'common/index.js'),
+  //core: resolve(libDir, 'core/index.js'),
+  //builder: resolve(libDir, 'builder/index.js'),
+  //common: resolve(libDir, 'common/index.js'),
   utils: resolve(rootDir, 'node_modules/nuxt/lib/common/utils.js'),
-  app: resolve(libDir, 'app')
+  //app: resolve(libDir, 'app')
 }
 
 // -----------------------------
@@ -56,7 +56,7 @@ function genConfig (opts) {
       format: 'cjs',
       sourcemap: true
     },
-    external: ['fs', 'path', 'http', 'module']
+    external: ['fs', 'path', 'http', 'module', 'vue-server-renderer/server-plugin', 'vue-server-renderer/client-plugin', 'cluster']
       .concat(dependencies, opts.external),
     banner: opts.banner || banner,
     name: opts.modulename || 'Nuxt',
@@ -70,17 +70,18 @@ function genConfig (opts) {
       rollupCommonJS(),
 
       rollupBabel(Object.assign({
-        exclude: 'node_modules/(?![nuxt])',
+        exclude: 'node_modules/(?!nuxt)/*',
         plugins: [
           ['transform-runtime', { 'helpers': false, 'polyfill': false }],
-          'transform-async-to-generator',
+          //'transform-async-to-generator', // DISABLE -> https://github.com/babel/babel/issues/5784
           'array-includes',
           'external-helpers'
         ],
         presets: [
           ['env', {
             targets: {
-              node: '6.11.0'
+              uglifyjs: true,
+              node: '7.6' // CHANGE TO 7.6 -> https://github.com/babel/babel/issues/5784
             },
             modules: false
           }]
