@@ -12985,7 +12985,7 @@ var index$2 = Object.freeze({
 
 var cov_2qyaf1dgnu = function () {
   var path$$1 = '/var/www/projects.github/nuxt-generate-cluster/lib/single/master.js',
-      hash = '89f6f25fd64cfb8a4caabf7fb291a9e29cc5f84a',
+      hash = '311d4f7ffad525f33160e2f4d90030baf67147fb',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
@@ -13388,7 +13388,7 @@ var cov_2qyaf1dgnu = function () {
         },
         end: {
           line: 95,
-          column: 56
+          column: 38
         }
       },
       '40': {
@@ -13404,70 +13404,50 @@ var cov_2qyaf1dgnu = function () {
       '41': {
         start: {
           line: 98,
-          column: 18
+          column: 20
         },
         end: {
           line: 98,
-          column: 45
+          column: 47
         }
       },
       '42': {
         start: {
-          line: 100,
+          line: 99,
           column: 4
         },
         end: {
-          line: 102,
-          column: 5
+          line: 99,
+          column: 18
         }
       },
       '43': {
         start: {
-          line: 104,
-          column: 4
+          line: 101,
+          column: 20
         },
         end: {
-          line: 106,
-          column: 5
+          line: 101,
+          column: 49
         }
       },
       '44': {
         start: {
-          line: 107,
+          line: 102,
           column: 4
         },
         end: {
-          line: 107,
-          column: 18
+          line: 104,
+          column: 5
         }
       },
       '45': {
         start: {
-          line: 109,
-          column: 20
-        },
-        end: {
-          line: 109,
-          column: 49
-        }
-      },
-      '46': {
-        start: {
-          line: 110,
-          column: 4
-        },
-        end: {
-          line: 112,
-          column: 5
-        }
-      },
-      '47': {
-        start: {
-          line: 111,
+          line: 103,
           column: 6
         },
         end: {
-          line: 111,
+          line: 103,
           column: 27
         }
       }
@@ -13680,10 +13660,10 @@ var cov_2qyaf1dgnu = function () {
         loc: {
           start: {
             line: 92,
-            column: 38
+            column: 24
           },
           end: {
-            line: 113,
+            line: 105,
             column: 3
           }
         },
@@ -13916,83 +13896,35 @@ var cov_2qyaf1dgnu = function () {
       '7': {
         loc: {
           start: {
-            line: 100,
-            column: 4
-          },
-          end: {
             line: 102,
+            column: 4
+          },
+          end: {
+            line: 104,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 100,
-            column: 4
-          },
-          end: {
             line: 102,
-            column: 5
-          }
-        }],
-        line: 100
-      },
-      '8': {
-        loc: {
-          start: {
+            column: 4
+          },
+          end: {
             line: 104,
-            column: 4
-          },
-          end: {
-            line: 106,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 104,
-            column: 4
-          },
-          end: {
-            line: 106,
-            column: 5
-          }
-        }],
-        line: 104
-      },
-      '9': {
-        loc: {
-          start: {
-            line: 110,
-            column: 4
-          },
-          end: {
-            line: 112,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 110,
-            column: 4
-          },
-          end: {
-            line: 112,
             column: 5
           }
         }, {
           start: {
-            line: 110,
+            line: 102,
             column: 4
           },
           end: {
-            line: 112,
+            line: 104,
             column: 5
           }
         }],
-        line: 110
+        line: 102
       }
     },
     s: {
@@ -14041,9 +13973,7 @@ var cov_2qyaf1dgnu = function () {
       '42': 0,
       '43': 0,
       '44': 0,
-      '45': 0,
-      '46': 0,
-      '47': 0
+      '45': 0
     },
     f: {
       '0': 0,
@@ -14064,9 +13994,7 @@ var cov_2qyaf1dgnu = function () {
       '4': [0, 0],
       '5': [0, 0],
       '6': [0, 0],
-      '7': [0],
-      '8': [0],
-      '9': [0, 0]
+      '7': [0, 0]
     },
     _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
   },
@@ -14413,7 +14341,7 @@ var Master$3 = function (_ref) {
   }, {
     key: 'onExit',
     value: function () {
-      var _ref13 = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee8(worker, code, signal) {
+      var _ref13 = asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee8(worker) {
         var workerId, message, allDead;
         return regenerator.wrap(function _callee8$(_context8) {
           while (1) {
@@ -14424,55 +14352,41 @@ var Master$3 = function (_ref) {
                 cov_2qyaf1dgnu.s[39]++;
 
 
-                this.watchdog.exitWorker(workerId, { code: code, signal: signal });
+                this.watchdog.exitWorker(workerId);
                 cov_2qyaf1dgnu.s[40]++;
                 _.pull(this.workers, worker);
 
                 message = (cov_2qyaf1dgnu.s[41]++, 'Worker ' + workerId + ' exited');
-                /* istanbul ignore if */
-
                 cov_2qyaf1dgnu.s[42]++;
-                if (code !== 0) {
-                  message += ' with status code ' + code;
-                } else {
-                  cov_2qyaf1dgnu.b[7][0]++;
-                }
-                /* istanbul ignore if */
-                cov_2qyaf1dgnu.s[43]++;
-                if (signal) {
-                  message += ' by signal ' + signal;
-                } else {
-                  cov_2qyaf1dgnu.b[8][0]++;
-                }
-                cov_2qyaf1dgnu.s[44]++;
+
                 debug$3(message);
 
-                cov_2qyaf1dgnu.s[45]++;
-                _context8.next = 16;
+                cov_2qyaf1dgnu.s[43]++;
+                _context8.next = 12;
                 return this.watchdog.allDead();
 
-              case 16:
+              case 12:
                 allDead = _context8.sent;
-                cov_2qyaf1dgnu.s[46]++;
+                cov_2qyaf1dgnu.s[44]++;
 
                 if (!allDead) {
-                  _context8.next = 25;
+                  _context8.next = 21;
                   break;
                 }
 
-                cov_2qyaf1dgnu.b[9][0]++;
-                cov_2qyaf1dgnu.s[47]++;
-                _context8.next = 23;
+                cov_2qyaf1dgnu.b[7][0]++;
+                cov_2qyaf1dgnu.s[45]++;
+                _context8.next = 19;
                 return this.finished();
 
-              case 23:
-                _context8.next = 26;
+              case 19:
+                _context8.next = 22;
                 break;
 
-              case 25:
-                cov_2qyaf1dgnu.b[9][1]++;
+              case 21:
+                cov_2qyaf1dgnu.b[7][1]++;
 
-              case 26:
+              case 22:
               case 'end':
                 return _context8.stop();
             }
@@ -14480,7 +14394,7 @@ var Master$3 = function (_ref) {
         }, _callee8, this);
       }));
 
-      function onExit(_x7, _x8, _x9) {
+      function onExit(_x7) {
         return _ref13.apply(this, arguments);
       }
 
