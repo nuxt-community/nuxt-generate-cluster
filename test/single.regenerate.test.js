@@ -6,34 +6,29 @@ import finalhandler from 'finalhandler'
 import rp from 'request-promise-native'
 import { remove } from 'fs-extra'
 import { Utils } from 'nuxt'
-import { Master } from '../index.js'
+import { Single } from '../index.js'
 
 const port = 4002
 const url = (route) => 'http://localhost:' + port + route
 
 const rootDir = resolve(__dirname, 'fixtures/basic')
 let server = null
-let master = null
+// let master = null
 let ready = false
-let errorCount = 0
+let errorCount = -1
+
+const config = Object.assign(
+  require(resolve(rootDir, 'nuxt.config.js')),
+  require(resolve(__dirname, 'fixtures/nuxt.config.js')),
+  {
+    dev: false,
+    rootDir
+  }
+)
 
 // Init nuxt.js and create server listening on localhost:4000
 test.before('Init Nuxt.js 1st', async t => {
-  const config = Object.assign(
-    require(resolve(rootDir, 'nuxt.config.js')),
-    require(resolve(__dirname, 'fixtures/nuxt.config.js')),
-    {
-      dev: false,
-      rootDir
-    }
-  )
-
-  master = new Master(config, {
-    workerCount: 1,
-    setup: {
-      exec: resolve(__dirname, 'fixtures/cluster.worker.js')
-    }
-  })
+  const master = new Single.Master(config, { workerCount: 1 })
   master.plugin('finished', async ({ info }) => {
     errorCount = info.errors.length
     ready = true
@@ -70,20 +65,19 @@ test('/users/1 -> Not found', async t => {
 
 test('Regenerate nuxt 2nd', async t => {
   ready = false
-  errorCount = 0
+  errorCount = -1
+  const master = new Single.Master(config, { workerCount: 1 })
+  master.plugin('finished', async ({ info }) => {
+    errorCount = info.errors.length
+    ready = true
+  })
   try {
     await master.run({ build: false })
     while (!ready) { // eslint-disable-line no-unmodified-loop-condition
       await Utils.waitFor(250)
     }
-    /* Actually we would expect 0 errors here, but as we cannot initiate
-     * two Masters in one (ava test) process we use the same Master as in the
-     * first generate and only spawn a new worker
-     * As the Master was build previously, it still has the 'static' routes
-     * listed in options.router.routes which will again be generated including
-     * the errors
-     */
-    t.is(errorCount, 2)
+    // Expect no errors as the routes from generate.routes() should all be ok
+    t.is(errorCount, 0)
   } catch (err) {
   }
 })
