@@ -1,4 +1,6 @@
 # Multi-threaded generate command for Nuxt.js
+<a href="https://travis-ci.org/nuxt-community/nuxt-generate-cluster"><img src="https://api.travis-ci.org/nuxt-community/nuxt-generate-cluster.svg" alt="Build Status"></a>
+<a href="https://codecov.io/gh/nuxt-community/nuxt-generate-cluster"><img src="https://img.shields.io/codecov/c/github/nuxt-community/nuxt-generate-cluster/master.svg" alt="Coverage Status"></a>
 [![npm](https://img.shields.io/npm/dt/nuxt-generate-cluster.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/nuxt-generate-cluster/latest.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 <a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-next-800080.svg?style=flat-square" alt=""/></a>
