@@ -15,7 +15,7 @@ test.afterEach(t => {
 
 test('Count alive workers', async t => {
   const watchdog = new Generate.Watchdog()
-  watchdog.plugin('isWorkerAlive', ({ worker }) => {
+  watchdog.hook('isWorkerAlive', (worker) => {
     return worker.id === 1
   })
 
@@ -27,7 +27,7 @@ test('Count alive workers', async t => {
 
 test('Count dead workers', async t => {
   const watchdog = new Generate.Watchdog()
-  watchdog.plugin('isWorkerAlive', ({ worker }) => {
+  watchdog.hook('isWorkerAlive', (worker) => {
     return worker.id === 1
   })
 

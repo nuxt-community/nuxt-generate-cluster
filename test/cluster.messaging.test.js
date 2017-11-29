@@ -2,10 +2,7 @@ import test from 'ava'
 import sinon from 'sinon'
 import { Mixins, Generate } from '../'
 
-/* class BaseClass {
-  constructor () {}
-} */
-class Messenger extends Mixins.messaging(Generate.Worker) {}
+class Messenger extends Mixins.Messaging(Mixins.Hookable()) {}
 
 test.beforeEach(t => {
   t.context.error = console.error // eslint-disable-line no-console
@@ -20,18 +17,17 @@ test.afterEach(t => {
 test('Can send/receive', async t => {
   const sender = new Messenger()
   const receiver = new Messenger()
+  const receiverProcess = {}
+  receiverProcess.send = (message) => {
+    receiver.receiveCommand(message)
+  }
   const payload = { a: 1 }
 
-  receiver.plugin(Generate.Commands.sendRoutes, (message) => {
-    t.is(message.worker, undefined)
-    t.is(message.args, payload)
+  receiver.hook(Generate.Commands.sendRoutes, (arg) => {
+    t.is(arg, payload)
   })
 
-  sender.sendCommand({
-    send: (message) => {
-      receiver.receiveCommand(message)
-    }
-  }, Generate.Commands.sendRoutes, payload)
+  sender.sendCommand(receiverProcess, Generate.Commands.sendRoutes, payload)
 })
 
 test('Send unknown command fails', async t => {

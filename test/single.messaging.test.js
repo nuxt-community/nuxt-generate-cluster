@@ -1,11 +1,11 @@
 import test from 'ava'
 import sinon from 'sinon'
-import { Single, Generate } from '../'
+import { Single, Generate, Mixins } from '../'
 
 /* class BaseClass {
   constructor () {}
 } */
-class Messenger extends Single.Mixins.messaging(Generate.Worker) {}
+class Messenger extends Mixins.Hookable(Single.Mixins.Messaging(Generate.Worker)) {}
 
 test.beforeEach(t => {
   t.context.error = console.error // eslint-disable-line no-console
@@ -26,9 +26,8 @@ test('Can send/receive', async t => {
 
   const payload = { a: 1 }
 
-  receiver.plugin(Generate.Commands.sendRoutes, (message) => {
-    t.is(message.worker, undefined)
-    t.is(message.args, payload)
+  receiver.hook(Generate.Commands.sendRoutes, (args) => {
+    t.is(args, payload)
   })
 
   sender.sendCommand(receiver, Generate.Commands.sendRoutes, payload)

@@ -34,7 +34,7 @@ test.before('Init Nuxt.js 1st', async t => {
       exec: resolve(__dirname, 'fixtures/cluster.worker.js')
     }
   })
-  master.plugin('finished', async ({ info }) => {
+  master.hook('generate:done', async (info) => {
     errorCount = info.errors.length
     ready = true
   })
@@ -43,7 +43,7 @@ test.before('Init Nuxt.js 1st', async t => {
     while (!ready) { // eslint-disable-line no-unmodified-loop-condition
       await Utils.waitFor(250)
     }
-    t.is(errorCount, 2)
+    t.is(errorCount, 6)
   } catch (err) {
   }
   const serve = serveStatic(resolve(rootDir, 'dist'))
@@ -71,21 +71,19 @@ test('/users/1 -> Not found', async t => {
 test('Regenerate nuxt 2nd', async t => {
   ready = false
   errorCount = 0
-  try {
-    await master.run({ build: false })
-    while (!ready) { // eslint-disable-line no-unmodified-loop-condition
-      await Utils.waitFor(250)
-    }
-    /* Actually we would expect 0 errors here, but as we cannot initiate
-     * two Masters in one (ava test) process we use the same Master as in the
-     * first generate and only spawn a new worker
-     * As the Master was build previously, it still has the 'static' routes
-     * listed in options.router.routes which will again be generated including
-     * the errors
-     */
-    t.is(errorCount, 2)
-  } catch (err) {
+
+  await master.run({ build: false })
+  while (!ready) { // eslint-disable-line no-unmodified-loop-condition
+    await Utils.waitFor(250)
   }
+  /* Actually we would expect 0 errors here, but as we cannot initiate
+   * two Masters in one (ava test) process we use the same Master as in the
+   * first generate and only spawn a new worker
+   * As the Master was build previously, it still has the 'static' routes
+   * listed in options.router.routes which will again be generated including
+   * the errors
+   */
+  t.is(errorCount, 6)
 })
 
 test('/users/1 regenerated', async t => {

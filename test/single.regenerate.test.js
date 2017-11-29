@@ -13,9 +13,6 @@ const url = (route) => 'http://localhost:' + port + route
 
 const rootDir = resolve(__dirname, 'fixtures/basic')
 let server = null
-// let master = null
-let ready = false
-let errorCount = -1
 
 const config = Object.assign(
   require(resolve(rootDir, 'nuxt.config.js')),
@@ -28,19 +25,21 @@ const config = Object.assign(
 
 // Init nuxt.js and create server listening on localhost:4000
 test.before('Init Nuxt.js 1st', async t => {
+  let ready = false
+  let errorCount = -1
+
   const master = new Single.Master(config, { workerCount: 1 })
-  master.plugin('finished', async ({ info }) => {
+  master.hook('generate:done', async (info) => {
     errorCount = info.errors.length
     ready = true
   })
-  try {
-    await master.run({ build: true })
-    while (!ready) { // eslint-disable-line no-unmodified-loop-condition
-      await Utils.waitFor(250)
-    }
-    t.is(errorCount, 2)
-  } catch (err) {
+
+  await master.run({ build: true })
+  while (!ready) { // eslint-disable-line no-unmodified-loop-condition
+    await Utils.waitFor(250)
   }
+  t.is(errorCount, 6)
+
   const serve = serveStatic(resolve(rootDir, 'dist'))
   server = http.createServer((req, res) => {
     serve(req, res, finalhandler(req, res))
@@ -64,10 +63,11 @@ test('/users/1 -> Not found', async t => {
 })
 
 test('Regenerate nuxt 2nd', async t => {
-  ready = false
-  errorCount = -1
+  let ready = false
+  let errorCount = -1
+
   const master = new Single.Master(config, { workerCount: 1 })
-  master.plugin('finished', async ({ info }) => {
+  master.hook('generate:done', async (info) => {
     errorCount = info.errors.length
     ready = true
   })

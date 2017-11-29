@@ -14,12 +14,12 @@ let nuxt = null
 let server = null
 
 // Init nuxt.js and create server listening on localhost:4000
-test.before('Init Nuxt.js', async t => {
+test('Init Nuxt.js', async t => {
   const rootDir = resolve(__dirname, 'fixtures/basic')
   let config = require(resolve(rootDir, 'nuxt.config.js'))
   config.rootDir = rootDir
   config.dev = false
-  // START OF NUXT GENERATE CLUSTER SETUP
+
   config = Object.assign(config, require(resolve(__dirname, 'fixtures/nuxt.config.js')))
   const master = new Master(config, {
     workerCount: 2,
@@ -28,19 +28,18 @@ test.before('Init Nuxt.js', async t => {
     }
   })
   nuxt = master.generator.nuxt
+
   let ready = false
-  master.plugin('finished', async ({ info }) => {
-    t.is(info.errors.length, 2)
+  master.hook('generate:done', async (info) => {
+    t.is(info.errors.length, 6)
     ready = true
   })
-  try {
-    await master.run({ build: true })
-    while (!ready) { // eslint-disable-line no-unmodified-loop-condition
-      await Utils.waitFor(250)
-    }
-  } catch (err) {
+
+  await master.run({ build: true })
+  while (!ready) { // eslint-disable-line no-unmodified-loop-condition
+    await Utils.waitFor(250)
   }
-  // END OF NUXT GENERATE CLUSTER SETUP
+
   const serve = serveStatic(resolve(__dirname, 'fixtures/basic/dist'))
   server = http.createServer((req, res) => {
     serve(req, res, finalhandler(req, res))

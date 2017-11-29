@@ -10,10 +10,10 @@ test('Generate Error Nuxt.js', async t => {
     rootDir: resolve(__dirname, 'fixtures/error'),
     dev: false,
     generate: {
-      routes () {
+      routes() {
         return ['/']
       },
-      finished (info) {
+      done(info) {
         t.is(info.errors.length, 1)
         t.is(info.errors[0].type, 'unhandled')
         t.true(info.errors[0].error.stack.includes('not_defined is not defined'))
