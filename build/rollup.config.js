@@ -15,7 +15,7 @@ const version = packageJson.version || process.env.VERSION
 // -----------------------------
 const banner =
   '/*!\n' +
-  ' * Nuxt-Generate-Cluster.js v' + version + '\n' +
+  ' * Nuxt-Generate-Cluster v' + version + '\n' +
   ' * Released under the MIT License.\n' +
   ' */'
 
@@ -27,11 +27,11 @@ const libDir = resolve(rootDir, 'lib')
 const distDir = resolve(rootDir, 'dist')
 
 const aliases = {
-  core: resolve(libDir, 'core/index.js'),
-  builder: resolve(libDir, 'builder/index.js'),
-  common: resolve(libDir, 'common/index.js'),
-  utils: resolve(rootDir, 'node_modules/nuxt/lib/common/utils.js'),
-  app: resolve(libDir, 'app')
+  // core: resolve(libDir, 'core/index.js'),
+  // builder: resolve(libDir, 'builder/index.js'),
+  // common: resolve(libDir, 'common/index.js'),
+  // utils: resolve(libDir, 'common/utils.js'),
+  // app: resolve(libDir, 'app')
 }
 
 // -----------------------------
@@ -56,7 +56,7 @@ function genConfig (opts) {
       format: 'cjs',
       sourcemap: true
     },
-    external: ['fs', 'path', 'http', 'module']
+    external: ['fs', 'path', 'http', 'module', 'cluster', 'vue-server-renderer/server-plugin', 'vue-server-renderer/client-plugin']
       .concat(dependencies, opts.external),
     banner: opts.banner || banner,
     name: opts.modulename || 'Nuxt',
@@ -70,7 +70,7 @@ function genConfig (opts) {
       rollupCommonJS(),
 
       rollupBabel(Object.assign({
-        exclude: 'node_modules/(?![nuxt])',
+        exclude: 'node_modules/**',
         plugins: [
           ['transform-runtime', { 'helpers': false, 'polyfill': false }],
           'transform-async-to-generator',
@@ -80,6 +80,7 @@ function genConfig (opts) {
         presets: [
           ['env', {
             targets: {
+              uglifyjs: true,
               node: '6.11.0'
             },
             modules: false

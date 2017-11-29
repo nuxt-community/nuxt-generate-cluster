@@ -6,3 +6,4 @@ require('source-map-support').install()
 process.noDeprecation = true
 
 module.exports = require('./dist/generator')
+
