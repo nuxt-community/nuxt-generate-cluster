@@ -1,13 +1,14 @@
-> :warning: Breaking change, the next release will change the configuration options and time keys from snake_case to camelCase
-
 # Multi-threaded generate command for Nuxt.js
 [![npm](https://img.shields.io/npm/dt/nuxt-generate-cluster.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/nuxt-generate-cluster/latest.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
-<a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-v1.0.0--rc11-800080.svg?style=flat-square" alt=""/></a>
+<a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-next-800080.svg?style=flat-square" alt=""/></a>
 
 > Use multiple workers to generate the static files for your Nuxt.js project
 
+### :fire: Please use the `@next` version of this package and nuxt until a new nuxt version is released
+
 ## Setup
+
 Install the package with npm
 ```
  npm install --save nuxt-generate-cluster@1.0.0-rc11
@@ -39,7 +40,7 @@ Configure the generate options in `nuxt.config.js`
         return res.data
       })
     },
-    finished ({ duration, errors, workerInfo }) {
+    done ({ duration, errors, workerInfo }) {
       if (errors.length) {
         axios.post('https://api.example.com/routes', { generate_errors: errors })
       }
@@ -73,7 +74,7 @@ The unix timestamp when nuxt-generate last finished succesfully (eg not interrup
 
 > Timestamps are locally stored in `~/.data-store/nuxt-generate-cluster.json`, see [data-store](https://github.com/jonschlinkert/data-store)
 
-### `finished`
+### `done`
 
 This method will be called when all workers are finished, it receives three arguments:
 
