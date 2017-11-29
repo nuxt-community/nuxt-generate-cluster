@@ -109,12 +109,12 @@ if (cluster.isMaster) {
     workerConcurrency: argv['worker-concurrency']
   })
 
-  master.plugin('built', async (params) => {
+  master.hook('built', async (params) => {
     storeTime('lastBuilt')
     params = Object.assign(params, store.data || {})
   })
 
-  master.plugin('finished', async () => {
+  master.hook('finished', async () => {
     storeTime('lastFinished')
   })
 
