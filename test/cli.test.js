@@ -19,4 +19,6 @@ test('bin/nuxt-generate', async t => {
   t.true(stderr.includes(`${sep}users${sep}1${sep}index.html`))
   t.true(stderr.includes('Worker 1 exited'))
   t.true(stderr.includes('Worker 2 exited'))
+  t.true(stdout.includes('HTML Files generated in'))
+  t.true(stderr.includes('==== Error report ===='))
 })
