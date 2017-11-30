@@ -34,7 +34,7 @@ test.before('Init Nuxt.js 1st', async t => {
       exec: resolve(__dirname, 'fixtures/cluster.worker.js')
     }
   })
-  master.hook('generate:done', async (info) => {
+  master.hook('done', async (info) => {
     errorCount = info.errors.length
     ready = true
   })
