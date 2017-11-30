@@ -114,7 +114,7 @@ if (cluster.isMaster) {
     params = Object.assign(params, store.data || {})
   })
 
-  master.hook('finished', () => {
+  master.hook('done', () => {
     storeTime('lastFinished')
   })
 

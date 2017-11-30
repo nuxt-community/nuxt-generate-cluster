@@ -30,7 +30,7 @@ test('Init Nuxt.js', async t => {
   nuxt = master.generator.nuxt
 
   let ready = false
-  master.hook('generate:done', async (info) => {
+  master.hook('done', async (info) => {
     t.is(info.errors.length, 6)
     ready = true
   })
