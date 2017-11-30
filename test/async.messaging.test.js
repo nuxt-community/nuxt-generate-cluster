@@ -1,11 +1,11 @@
 import test from 'ava'
 import sinon from 'sinon'
-import { Single, Generate, Mixins } from '../'
+import { Async, Generate, Mixins } from '../'
 
 /* class BaseClass {
   constructor () {}
 } */
-class Messenger extends Mixins.Hookable(Single.Mixins.Messaging(Generate.Worker)) {}
+class Messenger extends Async.Mixins.Messaging(Mixins.Hookable()) {}
 
 test.beforeEach(t => {
   t.context.error = console.error // eslint-disable-line no-console

@@ -6,7 +6,7 @@ import finalhandler from 'finalhandler'
 import rp from 'request-promise-native'
 import { remove } from 'fs-extra'
 import { Utils } from 'nuxt'
-import { Single } from '../index.js'
+import { Async } from '../index.js'
 
 const port = 4002
 const url = (route) => 'http://localhost:' + port + route
@@ -28,8 +28,8 @@ test.before('Init Nuxt.js 1st', async t => {
   let ready = false
   let errorCount = -1
 
-  const master = new Single.Master(config, { workerCount: 1 })
-  master.hook('generate:done', async (info) => {
+  const master = new Async.Master(config, { workerCount: 1 })
+  master.hook('done', async (info) => {
     errorCount = info.errors.length
     ready = true
   })
@@ -66,8 +66,8 @@ test('Regenerate nuxt 2nd', async t => {
   let ready = false
   let errorCount = -1
 
-  const master = new Single.Master(config, { workerCount: 1 })
-  master.hook('generate:done', async (info) => {
+  const master = new Async.Master(config, { workerCount: 1 })
+  master.hook('done', async (info) => {
     errorCount = info.errors.length
     ready = true
   })

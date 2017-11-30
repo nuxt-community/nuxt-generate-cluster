@@ -1,7 +1,7 @@
 import test from 'ava'
 import { resolve } from 'path'
 import { Utils } from 'nuxt'
-import { Single } from '../index.js'
+import { Async } from '../index.js'
 
 // Init nuxt.js and create server listening on localhost:4000
 test('Generate Error Nuxt.js', async t => {
@@ -22,7 +22,7 @@ test('Generate Error Nuxt.js', async t => {
     }
   }
   options = Object.assign(options, require(resolve(__dirname, 'fixtures/nuxt.config.js')))
-  const master = new Single.Master(options, { workerCount: 1 })
+  const master = new Async.Master(options, { workerCount: 1 })
   try {
     await master.run({ build: true })
     while (!ready) { // eslint-disable-line no-unmodified-loop-condition

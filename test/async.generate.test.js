@@ -5,7 +5,7 @@ import serveStatic from 'serve-static'
 import finalhandler from 'finalhandler'
 import rp from 'request-promise-native'
 import { Utils } from 'nuxt'
-import { Single } from '../index.js'
+import { Async } from '../index.js'
 
 const port = 4002
 const url = (route) => 'http://localhost:' + port + route
@@ -21,7 +21,7 @@ test.before('Init Nuxt.js', async t => {
   config.dev = false
 
   config = Object.assign(config, require(resolve(__dirname, 'fixtures/nuxt.config.js')))
-  const master = new Single.Master(config, {
+  const master = new Async.Master(config, {
     workerCount: 2,
     setup: {
       exec: resolve(__dirname, 'fixtures/cluster.worker.js')
@@ -30,7 +30,7 @@ test.before('Init Nuxt.js', async t => {
   nuxt = master.generator.nuxt
 
   let ready = false
-  master.hook('generate:done', async (info) => {
+  master.hook('done', async (info) => {
     t.is(info.errors.length, 6)
     ready = true
   })
