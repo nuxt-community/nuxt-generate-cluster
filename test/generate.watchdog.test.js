@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import { Generate } from '../'
+import { Generate } from '..'
 import { Utils } from 'nuxt'
 
 test.beforeEach(t => {

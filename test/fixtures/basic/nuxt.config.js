@@ -20,8 +20,7 @@ module.exports = {
   },
   transition: false,
   build: {
-    postcss: [
-      require('postcss-cssnext')()
-    ]
+    scopeHoisting: true,
+    postcss: [require('postcss-cssnext')()]
   }
 }

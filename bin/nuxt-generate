@@ -100,7 +100,7 @@ if (cluster.isMaster) {
     lastFinished: 0
   })
 
-  const { Master } = require('../')
+  const { Master } = require('..')
   const { join } = require('path')
   
   storeTime('lastStarted')
@@ -135,7 +135,7 @@ if (cluster.isMaster) {
   params = Object.assign({}, params || {}, store.data || {})
   master.run({ build, params })
 } else {
-  const { Worker } = require('../')
+  const { Worker } = require('..')
 
   const options = JSON.parse(process.env.options)
 

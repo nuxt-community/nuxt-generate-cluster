@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import { Async, Generate, Mixins } from '../'
+import { Async, Generate, Mixins } from '..'
 
 /* class BaseClass {
   constructor () {}

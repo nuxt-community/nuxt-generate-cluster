@@ -3,24 +3,20 @@
 <a href="https://codecov.io/gh/nuxt-community/nuxt-generate-cluster"><img src="https://img.shields.io/codecov/c/github/nuxt-community/nuxt-generate-cluster/master.svg" alt="Coverage Status"></a>
 [![npm](https://img.shields.io/npm/dt/nuxt-generate-cluster.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/nuxt-generate-cluster/latest.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
-<a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-next-800080.svg?style=flat-square" alt=""/></a>
+<a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-v1.3.0-800080.svg?style=flat-square" alt=""/></a>
 
 > Use multiple workers to generate the static files for your Nuxt.js project
-
-### :fire: Please use the `@next` version of this package and nuxt until a new nuxt version is released
 
 ## Setup
 
 Install the package with npm
 ```
- npm install --save nuxt-generate-cluster@1.0.0-rc11
+ npm install --save nuxt-generate-cluster
 ```
 or use yarn
 ```
-yarn add nuxt-generate-cluster@1.0.0-rc11`
+yarn add nuxt-generate-cluster`
 ```
-> The version of this package is in sync with Nuxt's version, use the correct version as your dependency to make sure the generate command supports the latest Nuxt.js features.
-
 Optionally add a generate script to your `package.json`
 ```js
   "scripts": {

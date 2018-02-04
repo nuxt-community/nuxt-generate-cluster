@@ -1,16 +1,6 @@
 import test from 'ava'
-import sinon from 'sinon'
-import { Generate, Mixins } from '../'
-
-test.beforeEach(t => {
-  t.context.error = console.error // eslint-disable-line no-console
-
-  console.error = sinon.spy() // eslint-disable-line no-console
-})
-
-test.afterEach(t => {
-  console.error = t.context.error // eslint-disable-line no-console
-})
+import { Generate, Mixins } from '..'
+import { interceptError, release } from './helpers/console'
 
 test('generate.master.getRoutes fails on exception in generator', async t => {
   const master = new Generate.Master({}, {})
@@ -21,34 +11,43 @@ test('generate.master.getRoutes fails on exception in generator', async t => {
   t.false(success)
 })
 
-test('generate.master.startWorkers shows error message', async t => {
+test.serial('generate.master.startWorkers shows error message', async t => {
+  const errorSpy = await interceptError()
   const master = new Generate.Master({}, {})
   master.startWorkers()
-  t.true(console.error.calledOnce) // eslint-disable-line no-console
+  release()
+
+  t.true(errorSpy.calledOnce)
 })
 
-test('generate.worker.generateRoutes fails on exception in generator', async t => {
+test.serial('generate.worker.generateRoutes fails on exception in generator', async t => {
   const worker = new Generate.Worker({}, {})
   worker.generator.generateRoutes = () => {
     throw new Error('Error')
   }
+
+  const errorSpy = await interceptError()
   const error = await t.throws(worker.generateRoutes([]))
+  release()
+
+  t.true(errorSpy.calledTwice)
   t.is(error.message, 'Error')
 })
 
-test('error in hooks are logged', async t => {
+test.serial('error in hooks are logged', async t => {
   class HookTestClass extends Mixins.Hookable() {}
 
   const msg = 'Oops'
   const hookName = 'throw-error'
+  const errorSpy = await interceptError()
   const hookTest = new HookTestClass()
   hookTest.hook(hookName, msg => {
     throw new Error(msg)
   })
-
   await hookTest.callHook(hookName, msg)
+  release()
 
-  t.true(console.error.calledTwice) // eslint-disable-line no-console
-  t.true(console.error.args[0][0].includes(hookName)) // eslint-disable-line no-console
-  t.is(console.error.args[1][0].message, msg) // eslint-disable-line no-console
+  t.true(errorSpy.calledTwice)
+  t.true(errorSpy.args[0][0].includes(hookName))
+  t.is(errorSpy.args[1][0].message, msg)
 })
