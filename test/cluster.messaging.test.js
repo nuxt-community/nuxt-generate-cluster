@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import { Mixins, Generate } from '../'
+import { Mixins, Generate } from '..'
 
 class Messenger extends Mixins.Messaging(Mixins.Hookable()) {}
 

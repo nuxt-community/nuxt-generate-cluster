@@ -9,11 +9,11 @@ package-lock.json
 npm-debug.log*
 
 # Other
-.nuxt
+.nuxt*
 .cache
 
 # Dist folder
-dist
+dist*
 
 # Dist example generation
 examples/**/dist
