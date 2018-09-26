@@ -1,0 +1,15 @@
+{
+  "env": {
+    "test": {
+      "presets": [
+        ["@babel/preset-env", {
+          "targets": {
+            "node": "current"
+          },
+          "useBuiltIns": "usage"
+        }]
+      ],
+      "plugins": ["dynamic-import-node"]
+    }
+  }
+}

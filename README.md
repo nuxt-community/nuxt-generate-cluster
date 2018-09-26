@@ -4,21 +4,18 @@
 <a href="https://codecov.io/gh/nuxt-community/nuxt-generate-cluster"><img src="https://img.shields.io/codecov/c/github/nuxt-community/nuxt-generate-cluster/master.svg" alt="Coverage Status"></a>
 [![npm](https://img.shields.io/npm/dt/nuxt-generate-cluster.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/nuxt-generate-cluster/latest.svg?style=flat-square)](https://www.npmjs.com/package/nuxt-generate-cluster)
-<a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-v1.4.0-800080.svg?style=flat-square" alt=""/></a>
+<a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-v2.0.0-800080.svg?style=flat-square" alt=""/></a>
 
 > Use multiple workers to generate the static files for your Nuxt.js project
 
 ## Setup
 
-Install the package with npm
-```
- npm install --save nuxt-generate-cluster
-```
-or use yarn
+Install the package
 ```
 yarn add nuxt-generate-cluster`
 ```
-Optionally add a generate script to your `package.json`
+
+Add a generate script to your `package.json`
 ```js
   "scripts": {
     "generate": "nuxt-generate -w 4"
@@ -112,24 +109,27 @@ An object with detailed information about each worker. Data passed is from the w
 > Please note that you need to explicitly indicate with `-b` that you want to (re-)build your project
 
 ```
-$ nuxt-generate --help
-    Description
-      Generate a static web application (server-rendered)
-    Usage
-      $ nuxt-generate <dir>
-    Options
-      -b, --build           Whether to (re-)build the nuxt project
-      -c, --config-file     Path to Nuxt.js config file (default: nuxt.config.js)
-      -h, --help            Displays this message
-      -p, --params          Extra parameters which should be passed to routes method
-                              (should be a JSON string or queryString)
-      -w, --workers [NUM]   How many workers should be started
-                              (default: # cpus)
-      -wc [NUM],            How many routes should be sent to 
-      --worker-concurrency [NUM]    a worker per iteration
+$ ./node_modules/.bin/nuxt-generate -h
 
-      --spa               Launch in SPA mode
-      --universal         Launch in Universal mode (default)
+  Multi-threaded generate for nuxt using cluster
+
+  Description
+    Generate a static web application (server-rendered)
+  Usage
+    $ nuxt-generate <dir>
+  Options
+    -b, --build           Whether to (re-)build the nuxt project
+    -c, --config-file     Path to Nuxt.js config file (default: nuxt.config.js)
+    -h, --help            Displays this message
+    -p, --params          Extra parameters which should be passed to routes method
+                            (should be a JSON string or queryString)
+    -q, --quiet           Decrease verbosity (repeat to decrease more)
+    -v, --verbose         Increase verbosity (repeat to increase more)
+    -w, --workers [NUM]   How many workers should be started
+                            (default: # cpus)
+    -wc [NUM],            How many routes should be sent to 
+    --worker-concurrency [NUM]    a worker per iteration
+
 ```
 
 If you need to have more control which routes should be generated, use the `-p` option to pass additional parameters to your routes method.
@@ -160,5 +160,23 @@ $ npm run generate -- -p '{ "id": [1,2,3] }'
   lastBuilt: 0,
   lastFinished: 0 }
 ```
+
+## Logging
+
+You can use multiple `-v` or `-q` on the command-line to increase or decrease verbosity.
+We use consola for logging and set a default log level of 3 unless DEBUG is set, then its 5.
+If you want to log debug messages without setting DEBUG you can use `-vv` on the command-line
+
+The difference between log levels 2, 3 and 4 are:
+
+- `Level 2` (-q)
+Only print master messages like worker started / exited. No worker messages.
+
+- `Level 3`
+Also print which routes the workers generated
+
+- `Level 4` (-v)
+Also print how much time the route generation took and messages between master and workers
+
 
 
