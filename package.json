@@ -8,7 +8,7 @@
     "build": "rollup -c build/rollup.config.js",
     "coverage": "codecov",
     "lint": "eslint --ext .js bin/** lib test",
-    "test": "yarn test:fixtures && yarn test:unit -- -i && yarn test:cli",
+    "test": "yarn test:fixtures && yarn test:unit -i && yarn test:cli",
     "test:fixtures": "jest test/fixtures",
     "test:unit": "jest test/unit --coverage",
     "test:cli": "jest test/cli",

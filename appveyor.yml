@@ -27,9 +27,7 @@ test_script:
   # - npm --version
   - yarn --version
   # run tests
-  - yarn test:fixtures -w=2
-  - yarn test:unit -w=2
-  - yarn test:cli -w=2
+  - yarn test
 
 # Don't actually build.
 build: off

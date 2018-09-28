@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import { resolve, sep } from 'path'
 import cluster from 'cluster'
 import { Cluster, loadFixture, consola } from '../utils'
 
@@ -61,7 +61,9 @@ describe('cluster worker', () => {
 
     expect(ccluster).toHaveBeenCalledWith(`received ${routesLength} routes`)
     expect(cworker).toHaveBeenCalledTimes(routesLength)
-    expect(cworker).toHaveBeenCalledWith(expect.stringMatching(/generated: \/users\/1\/index.html \([0-9]+ms\)/))
+    const esep = sep.replace('\\', '\\\\')
+    const reg = 'generated: ' + esep + 'users' + esep + '1' + esep + 'index.html \\([0-9]+ms\\)'
+    expect(cworker).toHaveBeenCalledWith(expect.stringMatching(new RegExp(reg)))
   })
 
   test('sets id based on cluster id', () => {
