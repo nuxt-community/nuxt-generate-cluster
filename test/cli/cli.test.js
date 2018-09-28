@@ -16,7 +16,7 @@ describe('cli', () => {
       // Nuxt sets log level to 0 for CI and env=TEST
       // -v offsets from default log level, not current level
       // hence one -v is enough
-      const nuxtGenerate = spawn('node', [binGenerate, '-b', rootDir, '-w 2', '-v'], { env })
+      const nuxtGenerate = spawn('nyc', ['--reporter', 'none', 'node', binGenerate, '-b', rootDir, '-w', '2', '-v'], { env })
 
       nuxtGenerate.stdout.on('data', (data) => { stdout += data.toString() })
       nuxtGenerate.stderr.on('data', (data) => { stderr += data.toString() })

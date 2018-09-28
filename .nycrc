@@ -1,0 +1,6 @@
+{
+  "report-dir": "./coverage/",
+  "include": [
+    "lib"
+  ]
+}

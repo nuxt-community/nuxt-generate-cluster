@@ -1,9 +1,12 @@
-import consola from 'consola'
-import { Async, Generate, Mixins } from '../utils'
+import { Async, Generate, Mixins, consola } from '../utils'
 
 class Messenger extends Async.Mixins.Messaging(Mixins.Hookable()) {}
 
 describe('async messaging', () => {
+  afterEach(() => {
+    consola.reset()
+  })
+
   test('Can send/receive', () => {
     const sender = new Messenger()
     Messenger.workers = []
@@ -25,7 +28,6 @@ describe('async messaging', () => {
 
     sender.sendCommand('unknown-command')
     expect(consola.error).toHaveBeenCalledTimes(1)
-    consola.error.mockReset()
   })
 
   test('Receive unknown command fails', () => {
@@ -33,7 +35,6 @@ describe('async messaging', () => {
 
     receiver.receiveCommand(undefined, { cmd: 'unknown-command' })
     expect(consola.error).toHaveBeenCalledTimes(1)
-    consola.error.mockReset()
   })
 
   test('Receive command without plugins fails', () => {
@@ -41,6 +42,5 @@ describe('async messaging', () => {
 
     receiver.receiveCommand(undefined, { cmd: Generate.Commands.sendRoutes })
     expect(consola.error).toHaveBeenCalledTimes(1)
-    consola.error.mockReset()
   })
 })

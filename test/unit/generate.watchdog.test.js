@@ -1,7 +1,10 @@
-import consola from 'consola'
-import { Utils, Generate } from '../utils'
+import { Utils, Generate, consola } from '../utils'
 
 describe('watchdog', () => {
+  afterEach(() => {
+    consola.reset()
+  })
+
   test('Count alive workers', async () => {
     const watchdog = new Generate.Watchdog()
     watchdog.hook('isWorkerAlive', (worker) => {
@@ -36,7 +39,6 @@ describe('watchdog', () => {
     watchdog.addWorker(1)
     watchdog.addWorker(1)
     expect(consola.error).toHaveBeenCalledTimes(1)
-    consola.error.mockReset()
   })
 
   test('Can add info', () => {
@@ -66,7 +68,6 @@ describe('watchdog', () => {
     watchdog.addWorker(1)
     watchdog.appendInfo(1, 'unknown-key', true)
     expect(consola.error).toHaveBeenCalledTimes(1)
-    consola.error.mockReset()
   })
 
   test('Can append string', () => {

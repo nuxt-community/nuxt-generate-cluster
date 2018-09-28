@@ -7,16 +7,24 @@ import { defaultsDeep, find } from 'lodash'
 import _rp from 'request-promise-native'
 import _Nuxt from 'nuxt'
 import pkg from '../../package.json'
-import _NuxtGC from '../../lib/index.js'
+import Cluster from '../../lib/index.js'
+import * as Async from '../../lib/async'
+import * as Generate from '../../lib/generate'
+import * as Mixins from '../../lib/mixins'
+import * as _Utils from '../../lib/utils'
+import Reporter from '../../lib/utils/reporter'
 
-export const Cluster = {
-  Master: _NuxtGC.Master,
-  Worker: _NuxtGC.Worker,
-  Mixins: _NuxtGC.Mixins
+const consola = _Utils.consola
+
+export {
+  Cluster,
+  Async,
+  Generate,
+  Mixins,
+  _Utils,
+  Reporter,
+  consola
 }
-export const Async = _NuxtGC.Async
-export const Generate = _NuxtGC.Generate
-export const Mixins = _NuxtGC.CommonMixins
 
 export const rp = _rp
 export const getPort = _getPort
