@@ -85,7 +85,8 @@ if (cluster.isMaster) {
     })
 
     delete require.cache[nuxtConfigFile]
-    options = esm(nuxtConfigFile).default
+    options = esm(nuxtConfigFile)
+    options = options.default || options
   } else if (cli.flags.config && cli.flags.config !== 'nuxt.config.js') {
     console.error(`> Could not load config file ${cli.flags.config}`) // eslint-disable-line no-console
     process.exit(1)
