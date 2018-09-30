@@ -4,8 +4,6 @@ import { Cluster, loadFixture, consola } from '../utils'
 
 jest.mock('cluster')
 
-process.stderr.write = jest.fn()
-
 describe('cluster worker', () => {
   let worker
   const rootDir = resolve(__dirname, '..', 'fixtures/basic')
@@ -18,23 +16,21 @@ describe('cluster worker', () => {
     worker = new Cluster.Worker(config)
     await worker.run()
   })
+  
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
 
   test('can generate routes', async () => {
-    const routes = worker.generator.nuxt.options.generate.routes.map((route) => {
-      if (typeof route === 'string') {
-        return { route }
-      } else {
-        return route
-      }
-    })
+    let routes = worker.generator.nuxt.options.generate.routes
+    routes =  worker.generator.decorateWithPayloads([], routes)
 
     const routesLength = routes.length
     const spy = jest.fn()
     worker.generator.nuxt.hook('generate:routeCreated', spy)
     await worker.generateRoutes(routes)
-
     expect(consola.cluster).toHaveBeenCalledWith(`received ${routesLength} routes`)
-    expect(consola.worker).toHaveBeenCalledTimes(routesLength)
+    expect(consola.worker).toHaveBeenCalledTimes(routesLength - consola.error.mock.calls.length)
   })
 
   test('calculates duration on level >4', async () => {
@@ -46,13 +42,8 @@ describe('cluster worker', () => {
     consola.cluster = ccluster
     consola.worker = cworker
 
-    const routes = worker.generator.nuxt.options.generate.routes.map((route) => {
-      if (typeof route === 'string') {
-        return { route }
-      } else {
-        return route
-      }
-    })
+    let routes = worker.generator.nuxt.options.generate.routes
+    routes =  worker.generator.decorateWithPayloads([], routes)
 
     const routesLength = routes.length
     const spy = jest.fn()
@@ -60,7 +51,7 @@ describe('cluster worker', () => {
     await worker.generateRoutes(routes)
 
     expect(ccluster).toHaveBeenCalledWith(`received ${routesLength} routes`)
-    expect(cworker).toHaveBeenCalledTimes(routesLength)
+    expect(cworker).toHaveBeenCalledTimes(routesLength - consola.error.mock.calls.length)
     const esep = sep.replace('\\', '\\\\')
     const reg = 'generated: ' + esep + 'users' + esep + '1' + esep + 'index.html \\([0-9]+ms\\)'
     expect(cworker).toHaveBeenCalledWith(expect.stringMatching(new RegExp(reg)))

@@ -12,7 +12,7 @@ import * as Async from '../../lib/async'
 import * as Generate from '../../lib/generate'
 import * as Mixins from '../../lib/mixins'
 import * as _Utils from '../../lib/utils'
-import Reporter from '../../lib/utils/reporter'
+import * as Reporters from '../../lib/utils/reporters'
 
 const consola = _Utils.consola
 
@@ -22,7 +22,7 @@ export {
   Generate,
   Mixins,
   _Utils,
-  Reporter,
+  Reporters,
   consola
 }
 
