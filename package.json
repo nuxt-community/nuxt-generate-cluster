@@ -1,6 +1,6 @@
 {
   "name": "nuxt-generate-cluster",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Multi-threaded generate for nuxt using cluster",
   "main": "index.js",
   "module": "./lib/index.js",
