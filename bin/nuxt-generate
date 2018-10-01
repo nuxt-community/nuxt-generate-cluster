@@ -141,7 +141,6 @@ if (cluster.isMaster) {
 
   master.hook('built', (params) => {
     storeTime('lastBuilt')
-    params = Object.assign(params, store.data || {})
   })
 
   master.hook('done', ({ duration, errors, workerInfo }) => {
@@ -162,7 +161,7 @@ if (cluster.isMaster) {
     }
   })
 
-  params = Object.assign({}, params || {}, store.data || {})
+  params = Object.assign({}, store.data || {}, params || {})
   master.run({ build: cli.flags.build, params })
 } else {
   const { Worker } = require('..')
