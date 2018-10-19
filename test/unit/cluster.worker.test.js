@@ -16,14 +16,14 @@ describe('cluster worker', () => {
     worker = new Cluster.Worker(config)
     await worker.run()
   })
-  
+
   beforeEach(() => {
     jest.resetAllMocks()
   })
 
   test('can generate routes', async () => {
     let routes = worker.generator.nuxt.options.generate.routes
-    routes =  worker.generator.decorateWithPayloads([], routes)
+    routes = worker.generator.decorateWithPayloads([], routes)
 
     const routesLength = routes.length
     const spy = jest.fn()
@@ -43,7 +43,7 @@ describe('cluster worker', () => {
     consola.worker = cworker
 
     let routes = worker.generator.nuxt.options.generate.routes
-    routes =  worker.generator.decorateWithPayloads([], routes)
+    routes = worker.generator.decorateWithPayloads([], routes)
 
     const routesLength = routes.length
     const spy = jest.fn()
