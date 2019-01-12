@@ -31,14 +31,17 @@ export default {
       '/store-module',
       '/users/1',
       '/users/2',
+      '/тест雨',
       { route: '/users/3', payload: { id: 3000 } }
     ],
     interval: 200,
     subFolders: true
   },
-  head: {
-    titleTemplate: (titleChunk) => {
-      return titleChunk ? `${titleChunk} - Nuxt.js` : 'Nuxt.js'
+  head() {
+    return {
+      titleTemplate(titleChunk) {
+        return titleChunk ? `${titleChunk} - Nuxt.js` : 'Nuxt.js'
+      }
     }
   },
   modulesDir: path.join(__dirname, '..', '..', '..', 'node_modules'),
@@ -63,17 +66,22 @@ export default {
   transition: false,
   plugins: [
     '~/plugins/vuex-module',
-    '~/plugins/dir-plugin'
+    '~/plugins/dir-plugin',
+    '~/plugins/inject'
   ],
   build: {
     scopeHoisting: true,
-    postcss: [
-      require('postcss-preset-env')({
+    publicPath: '',
+    postcss: {
+      preset: {
         features: {
           'custom-selectors': true
         }
-      }),
-      require('cssnano')
-    ]
+      },
+      plugins: {
+        cssnano: {},
+        [path.resolve(__dirname, 'plugins', 'tailwind.js')]: {}
+      }
+    }
   }
 }

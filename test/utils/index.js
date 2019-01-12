@@ -5,45 +5,51 @@ import klawSync from 'klaw-sync'
 import _getPort from 'get-port'
 import { defaultsDeep, find } from 'lodash'
 import _rp from 'request-promise-native'
-import _Nuxt from 'nuxt'
+
 import pkg from '../../package.json'
 import Cluster from '../../lib/index.js'
 import * as Async from '../../lib/async'
 import * as Generate from '../../lib/generate'
 import * as Mixins from '../../lib/mixins'
-import * as _Utils from '../../lib/utils'
 import * as Reporters from '../../lib/utils/reporters'
 
-const consola = _Utils.consola
+import { Nuxt, Builder, BundleBuilder, Generator, waitFor } from '../../lib/utils/nuxt'
+
+const Utils = {
+  waitFor
+}
+
+export * from '../../lib/utils'
 
 export {
   Cluster,
   Async,
   Generate,
   Mixins,
-  _Utils,
   Reporters,
-  consola
+  Nuxt,
+  Utils,
+  Builder,
+  BundleBuilder,
+  Generator
 }
 
 export const rp = _rp
 export const getPort = _getPort
 export const version = pkg.version
 
-export const Nuxt = _Nuxt.Nuxt
-export const Utils = _Nuxt.Utils
-export const Options = _Nuxt.Options
-export const Builder = _Nuxt.Builder
-export const Generator = _Nuxt.Generator
-
 export const loadFixture = async function (fixture, overrides) {
   const rootDir = path.resolve(__dirname, '..', 'fixtures', fixture)
-  const configFile = path.resolve(rootDir, 'nuxt.config.js')
+  const configFile = path.resolve(rootDir, `nuxt.config${process.env.NUXT_TS === 'true' ? '.ts' : '.js'}`)
 
-  const config = fs.existsSync(configFile) ? (await import(`../fixtures/${fixture}/nuxt.config`)).default : {}
+  let config = fs.existsSync(configFile) ? (await import(`../fixtures/${fixture}/nuxt.config`)).default : {}
+  if (typeof config === 'function') {
+    config = await config()
+  }
 
   config.rootDir = rootDir
   config.dev = false
+  config.test = true
 
   return defaultsDeep({}, overrides, config)
 }
@@ -61,7 +67,7 @@ export const waitUntil = async function waitUntil(condition, duration = 20, inte
   const steps = Math.floor(duration * 1000 / interval)
 
   while (!condition() && iterator < steps) {
-    await Utils.waitFor(interval)
+    await waitFor(interval)
     iterator++
   }
 

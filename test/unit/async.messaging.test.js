@@ -1,10 +1,12 @@
 import { Async, Generate, Mixins, consola } from '../utils'
 
+jest.mock('../../lib/utils/consola')
+
 class Messenger extends Async.Mixins.Messaging(Mixins.Hookable()) {}
 
 describe('async messaging', () => {
   afterEach(() => {
-    consola.reset()
+    jest.clearAllMocks()
   })
 
   test('Can send/receive', () => {

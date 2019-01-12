@@ -7,7 +7,15 @@ describe.skip.win = isWin ? describe.skip : describe
 test.skip.win = isWin ? test.skip : test
 
 jest.setTimeout(60000)
+/*
+import consola from 'consola'
+import { Consola, BasicReporter, FancyReporter } from 'consola/dist/consola.cjs.js'
 
+jest.mock('consola')
+jest.mock('consola/dist/consola.cjs.js')
+delete global.consola */
+
+/*
 jest.mock('consola', () => {
   const levels = [
     'fatal', 'error', 'warn', 'log', 'info',
@@ -85,3 +93,4 @@ jest.mock('../../lib/utils/consola', () => {
 
   return consola
 })
+/**/

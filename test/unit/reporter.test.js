@@ -4,11 +4,12 @@ import { Reporters } from '../utils'
 
 let reporter
 
+jest.mock('consola')
 jest.mock('../../lib/utils/messaging')
 
 describe('basic reporter', () => {
   beforeEach(() => {
-    jest.resetAllMocks()
+    jest.clearAllMocks()
     reporter = new Reporters.BasicReporter()
   })
 
@@ -16,7 +17,7 @@ describe('basic reporter', () => {
   test('nuxt success generated msg is ignored', () => {
     reporter.superLog({
       type: 'success',
-      message: 'Generated TEST'
+      args: ['Generated TEST']
     })
 
     expect(consola.success).not.toHaveBeenCalled()
@@ -25,7 +26,7 @@ describe('basic reporter', () => {
   test('log is received by messaging', () => {
     reporter.log({
       type: 'debug',
-      message: 'Something'
+      args: ['Something']
     })
 
     expect(messaging.send).toHaveBeenCalledTimes(1)
@@ -34,7 +35,7 @@ describe('basic reporter', () => {
 
 describe('fancy reporter', () => {
   beforeEach(() => {
-    jest.resetAllMocks()
+    jest.clearAllMocks()
     reporter = new Reporters.FancyReporter()
   })
 
@@ -42,7 +43,7 @@ describe('fancy reporter', () => {
   test('nuxt success generated msg is ignored', () => {
     reporter.superLog({
       type: 'success',
-      message: 'Generated TEST'
+      args: ['Generated TEST']
     })
 
     expect(consola.success).not.toHaveBeenCalled()
@@ -51,7 +52,7 @@ describe('fancy reporter', () => {
   test('log is received by messaging', () => {
     reporter.log({
       type: 'debug',
-      message: 'Something'
+      args: ['Something']
     })
 
     expect(messaging.send).toHaveBeenCalledTimes(1)

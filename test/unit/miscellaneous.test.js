@@ -1,8 +1,10 @@
 import { Generate, Mixins, consola } from '../utils'
 
+jest.mock('../../lib/utils/consola')
+
 describe('miscellaneous', () => {
   beforeEach(() => {
-    consola.reset()
+    jest.clearAllMocks()
   })
 
   test('generate.master does not call build', () => {

@@ -1,8 +1,10 @@
 import { Utils, Generate, consola } from '../utils'
 
+jest.mock('../../lib/utils/consola')
+
 describe('watchdog', () => {
   afterEach(() => {
-    consola.reset()
+    jest.clearAllMocks()
   })
 
   test('Count alive workers', async () => {

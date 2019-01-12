@@ -2,8 +2,6 @@ import consolaDefault from 'consola'
 import env from 'std-env'
 import { consola } from '../utils'
 
-jest.unmock('../../lib/utils/consola')
-jest.unmock('consola')
 jest.mock('std-env', () => {
   return {
     minimalCLI: false
@@ -15,8 +13,8 @@ describe('consola', () => {
     Object.keys(consolaDefault).forEach((key) => {
       // our consola should have all properties
       // of default consola except
-      // the Class exports
-      if (!key.match(/^[A-Z]/)) {
+      // the Class exports and _internal props
+      if (!key.match(/^[A-Z_]/)) {
         expect(consola[key]).not.toBeUndefined()
       }
     })
@@ -31,10 +29,7 @@ describe('consola', () => {
 
   // doesnt work
   test('uses fancy reporter by default', () => {
-    jest.resetModules()
-    const consola = require('consola')
-
     expect(Object.keys(env).length).toBe(1)
-    expect(consola.reporters[0].constructor.name).toBe('Reporter')
+    expect(consola._reporters[0].constructor.name).toBe('Reporter')
   })
 })

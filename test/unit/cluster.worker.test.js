@@ -3,6 +3,7 @@ import cluster from 'cluster'
 import { Cluster, loadFixture, consola } from '../utils'
 
 jest.mock('cluster')
+jest.mock('../../lib/utils/consola')
 
 describe('cluster worker', () => {
   let worker

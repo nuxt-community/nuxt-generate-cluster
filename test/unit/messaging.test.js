@@ -1,8 +1,6 @@
 import cluster from 'cluster'
 import consola from 'consola'
-import { _Utils } from '../utils'
-
-const { MessageBroker } = _Utils
+import { MessageBroker } from '../utils'
 
 const masterConf = { isMaster: true, alias: 'm' }
 const childConf = { isMaster: false, alias: 'c' }
@@ -11,12 +9,18 @@ let mb
 let cb
 
 jest.mock('cluster')
+jest.mock('consola')
 
 describe('messaging', () => {
   beforeEach(() => {
-    consola.reset()
     mb = new MessageBroker(masterConf)
     cb = new MessageBroker(childConf, mb)
+  })
+
+  afterEach(() => {
+    mb.close()
+    cb.close()
+    jest.clearAllMocks()
   })
 
   test('child can register with master', () => {
