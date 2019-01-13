@@ -1,5 +1,6 @@
 import path from 'path'
 import spawn from 'cross-spawn'
+import fs from 'fs'
 
 const rootDir = path.resolve(__dirname, '..', 'fixtures', 'basic')
 
@@ -15,7 +16,8 @@ describe('cli', () => {
       // hence one -v is enough
       const binGenerate = path.resolve(__dirname, '..', '..', 'bin', 'nuxt-generate')
       const binNyc = path.resolve(__dirname, '..', '..', 'node_modules', '.bin', 'nyc')
-
+      console.log(binNyc, fs.existsSync(binNyc))
+      console.log(binGenerate, fs.existsSync(binGenerate))
       const nuxtGenerate = spawn(binNyc, [
         '--reporter', 'none',
         'node',
@@ -33,8 +35,11 @@ describe('cli', () => {
         resolve({ stdout, stderr, error })
       })
     })
-
+    
+    console.log('stderr', stderr)
+    console.log('stdout', stdout)
     expect(error).toBeUndefined()
+    expect(stderr).toContain('==== Error report ====')
     expect(stdout).toContain('Nuxt files generated')
     expect(stdout).toContain('worker 1 started')
     expect(stdout).toContain('worker 2 started')
@@ -44,6 +49,5 @@ describe('cli', () => {
     expect(stdout).toContain('worker 1 exited')
     expect(stdout).toContain('worker 2 exited')
     expect(stdout).toContain('HTML Files generated in')
-    expect(stderr).toContain('==== Error report ====')
   })
 })
