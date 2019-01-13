@@ -16,8 +16,7 @@ describe('cli', () => {
       // hence one -v is enough
       const binGenerate = path.resolve(__dirname, '..', '..', 'bin', 'nuxt-generate')
       const binNyc = path.resolve(__dirname, '..', '..', 'node_modules', '.bin', 'nyc')
-      console.log(binNyc, fs.existsSync(binNyc))
-      console.log(binGenerate, fs.existsSync(binGenerate))
+
       const nuxtGenerate = spawn(binNyc, [
         '--reporter', 'none',
         binGenerate, '-b', rootDir, '-w', '2', '-v'
@@ -33,8 +32,6 @@ describe('cli', () => {
       })
     })
     
-    console.log('stderr', stderr)
-    console.log('stdout', stdout)
     expect(error).toBeUndefined()
     expect(stderr).toContain('==== Error report ====')
     expect(stdout).toContain('Nuxt files generated')
