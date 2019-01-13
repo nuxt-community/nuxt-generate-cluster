@@ -1,6 +1,5 @@
 import path from 'path'
 import spawn from 'cross-spawn'
-import fs from 'fs'
 
 const rootDir = path.resolve(__dirname, '..', 'fixtures', 'basic')
 
@@ -31,7 +30,7 @@ describe('cli', () => {
         resolve({ stdout, stderr, error })
       })
     })
-    
+
     expect(error).toBeUndefined()
     expect(stderr).toContain('==== Error report ====')
     expect(stdout).toContain('Nuxt files generated')

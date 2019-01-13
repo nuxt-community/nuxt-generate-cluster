@@ -31,7 +31,7 @@ describe('cluster generate', () => {
 
     generator = master.generator
     builder = generator.builder
-    
+
     builder.build = jest.fn()
     const nuxt = generator.nuxt
 
