@@ -35,7 +35,7 @@ describe('cluster worker', () => {
   })
 
   test('calculates duration on level >4', async () => {
-    consola.level = 4
+    consola._level = 4
     jest.unmock('consola')
 
     const ccluster = jest.fn()

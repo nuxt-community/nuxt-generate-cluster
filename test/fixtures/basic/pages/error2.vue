@@ -5,7 +5,7 @@
 <script>
 export default {
   asyncData({ error }) {
-    error({ message: 'Custom error', customProp: 'ezpz' })
+    error({ message: 'Custom error' })
   }
 }
 </script>

@@ -1,4 +1,4 @@
-import { Utils, Generate, consola } from '../utils'
+import { waitFor, Generate, consola } from '../utils'
 
 jest.mock('../../lib/utils/consola')
 
@@ -27,7 +27,7 @@ describe('watchdog', () => {
 
     watchdog.addWorker(1)
     watchdog.addWorker(2)
-    await Utils.waitFor(1)
+    await waitFor(1)
 
     watchdog.exitWorker(1)
     expect(await watchdog.allDead()).toBe(false)

@@ -1,6 +1,7 @@
 import { existsSync, writeFileSync } from 'fs'
 import http from 'http'
 import { resolve } from 'path'
+import { remove } from 'fs-extra'
 import serveStatic from 'serve-static'
 import finalhandler from 'finalhandler'
 import { Async, getPort, loadFixture, rp, listPaths, equalOrStartsWith, waitUntil } from '../utils'
@@ -10,6 +11,7 @@ const url = route => 'http://localhost:' + port + route
 const rootDir = resolve(__dirname, '..', 'fixtures/basic')
 const distDir = resolve(rootDir, '.nuxt-async')
 
+let builder
 let server = null
 let generator = null
 let pathsBefore
@@ -24,7 +26,9 @@ describe('async generate', () => {
     })
 
     generator = master.generator
-    generator.builder.build = jest.fn()
+    builder = generator.builder
+    
+    builder.build = jest.fn()
     const nuxt = generator.nuxt
 
     pathsBefore = listPaths(nuxt.options.rootDir)
@@ -51,8 +55,8 @@ describe('async generate', () => {
   })
 
   test('Check builder', () => {
-    expect(generator.builder.bundleBuilder.context.isStatic).toBe(true)
-    expect(generator.builder.build).toHaveBeenCalledTimes(1)
+    expect(builder.bundleBuilder.context.isStatic).toBe(true)
+    expect(builder.build).toHaveBeenCalledTimes(1)
   })
 
   test('Check ready hook called', () => {
@@ -108,7 +112,7 @@ describe('async generate', () => {
 
     const element = window.document.querySelector('.red')
     expect(element).not.toBe(null)
-    expect(element.textContent).toContain('This is red')
+    expect(element.textContent).toBe('This is red')
     expect(element.className).toBe('red')
     // t.is(window.getComputedStyle(element), 'red')
   })
@@ -178,5 +182,70 @@ describe('async generate', () => {
     const window = await generator.nuxt.server.renderAndGetWindow(url('/validate'))
     const html = window.document.body.innerHTML
     expect(html).toContain('This page could not be found')
+  })
+
+  test('/validate?valid=true', async () => {
+    const window = await generator.nuxt.server.renderAndGetWindow(url('/validate?valid=true'))
+    const html = window.document.body.innerHTML
+    expect(html).toContain('I am valid</h1>')
+  })
+
+  test('/redirect should not be server-rendered', async () => {
+    const html = await rp(url('/redirect'))
+    expect(html).toContain('<div id="__nuxt"></div>')
+    expect(html).toContain('serverRendered:!1')
+  })
+
+  test('/redirect -> check redirected source', async () => {
+    const window = await generator.nuxt.server.renderAndGetWindow(url('/redirect'))
+    const html = window.document.body.innerHTML
+    expect(html).toContain('<h1>Index page</h1>')
+  })
+
+  test('/users/1 not found', async () => {
+    await remove(resolve(distDir, 'users'))
+    await expect(rp(url('/users/1'))).rejects.toMatchObject({
+      statusCode: 404,
+      response: {
+        body: expect.stringContaining('Cannot GET /users/1')
+      }
+    })
+  })
+
+  test('nuxt re-generating with no subfolders', async () => {
+    generator.nuxt.options.generate.subFolders = false
+    await expect(generator.generate({ build: false })).resolves.toBeTruthy()
+  })
+
+  test('/users/1.html', async () => {
+    const html = await rp(url('/users/1.html'))
+    expect(html).toContain('<h1>User: 1</h1>')
+    expect(existsSync(resolve(distDir, 'users/1.html'))).toBe(true)
+    expect(
+      existsSync(resolve(distDir, 'users/1/index.html'))
+    ).toBe(false)
+  })
+
+  test('/-ignored', async () => {
+    await expect(rp(url('/-ignored'))).rejects.toMatchObject({
+      statusCode: 404,
+      response: {
+        body: expect.stringContaining('Cannot GET /-ignored')
+      }
+    })
+  })
+
+  test('/ignored.test', async () => {
+    await expect(rp(url('/ignored.test'))).rejects.toMatchObject({
+      statusCode: 404,
+      response: {
+        body: expect.stringContaining('Cannot GET /ignored.test')
+      }
+    })
+  })
+
+  // Close server and ask nuxt to stop listening to file changes
+  afterAll(async () => {
+    await server.close()
   })
 })

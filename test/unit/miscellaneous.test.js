@@ -63,7 +63,7 @@ describe('miscellaneous', () => {
   test('can pass consola.level to worker', () => {
     consola.defaultLevel = 0
     const worker = new Generate.Worker({ __workerLogLevel: 3 }, {})
-    expect(consola.level).toBe(3)
+    expect(consola._level).toBe(3)
     expect(worker.id).toBe(-1)
   })
 

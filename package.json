@@ -42,10 +42,10 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "nuxt-edge": "^2.4.0-25786640.3ebd6b70",
     "consola": "^2.3.2",
     "data-store": "^3.1.0",
     "meow": "^5.0.0",
+    "nuxt": "^2.3.4",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

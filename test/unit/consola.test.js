@@ -21,7 +21,7 @@ describe('consola', () => {
   })
 
   test('custom props should exists', () => {
-    ['defaultLevel', 'maxLevel', 'cluster', 'master', 'worker'].forEach((key) => {
+    ['_defaultLevel', '_maxLevel', 'cluster', 'master', 'worker'].forEach((key) => {
       expect(consola[key]).not.toBeUndefined()
       expect(consolaDefault[key]).toBeUndefined()
     })

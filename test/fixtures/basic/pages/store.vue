@@ -1,16 +1,12 @@
 <template>
   <div>
-    <h1>foo/bar/baz: {{ baz }}</h1>
+    <h1>{{ baz }}</h1>
     <br>
-    <h2>index/counter: {{ $store.state.counter }}</h2>
+    <p>{{ $store.state.counter }}</p>
     <br>
-    <h3>foo/blarg/getVal: {{ getVal }}</h3>
+    <h2>{{ getVal }}</h2>
     <br>
-    <h4>foo/bab/getBabVal: {{ getBabVal }}</h4>
-    <br>
-    <button @click="$store.commit('increment')">
-      +1
-    </button>
+    <h3>{{ getBabVal }}</h3>
   </div>
 </template>
 

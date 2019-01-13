@@ -11,6 +11,7 @@ const url = route => 'http://localhost:' + port + route
 const rootDir = resolve(__dirname, '..', 'fixtures/basic')
 const distDir = resolve(rootDir, '.nuxt-cluster')
 
+let builder
 let server = null
 let generator = null
 let pathsBefore
@@ -29,7 +30,9 @@ describe('cluster generate', () => {
     })
 
     generator = master.generator
-    generator.builder.build = jest.fn()
+    builder = generator.builder
+    
+    builder.build = jest.fn()
     const nuxt = generator.nuxt
 
     pathsBefore = listPaths(nuxt.options.rootDir)
@@ -56,8 +59,8 @@ describe('cluster generate', () => {
   })
 
   test('Check builder', () => {
-    expect(generator.builder.bundleBuilder.context.isStatic).toBe(true)
-    expect(generator.builder.build).toHaveBeenCalledTimes(1)
+    expect(builder.bundleBuilder.context.isStatic).toBe(true)
+    expect(builder.build).toHaveBeenCalledTimes(1)
   })
 
   test('Check ready hook called', () => {
@@ -113,7 +116,7 @@ describe('cluster generate', () => {
 
     const element = window.document.querySelector('.red')
     expect(element).not.toBe(null)
-    expect(element.textContent).toContain('This is red')
+    expect(element.textContent).toBe('This is red')
     expect(element.className).toBe('red')
     // t.is(window.getComputedStyle(element), 'red')
   })

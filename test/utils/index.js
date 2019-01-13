@@ -13,11 +13,7 @@ import * as Generate from '../../lib/generate'
 import * as Mixins from '../../lib/mixins'
 import * as Reporters from '../../lib/utils/reporters'
 
-import { Nuxt, Builder, BundleBuilder, Generator, waitFor } from '../../lib/utils/nuxt'
-
-const Utils = {
-  waitFor
-}
+export { Nuxt, Builder, BundleBuilder, Generator } from '../../lib/utils/nuxt'
 
 export * from '../../lib/utils'
 
@@ -26,12 +22,7 @@ export {
   Async,
   Generate,
   Mixins,
-  Reporters,
-  Nuxt,
-  Utils,
-  Builder,
-  BundleBuilder,
-  Generator
+  Reporters
 }
 
 export const rp = _rp
@@ -52,6 +43,10 @@ export const loadFixture = async function (fixture, overrides) {
   config.test = true
 
   return defaultsDeep({}, overrides, config)
+}
+
+export const waitFor = function waitFor(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms || 0))
 }
 
 /**
