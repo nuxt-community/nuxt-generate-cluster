@@ -8,7 +8,7 @@
     "coverage": "codecov",
     "lint": "eslint --ext .js bin/** lib test",
     "release": "yarn lint && yarn test && yarn build && standard-version",
-    "test": "yarn test:fixtures && yarn test:unit -i && yarn test:cli",
+    "test": "yarn test:fixtures && yarn test:unit && yarn test:cli",
     "test:fixtures": "jest test/fixtures",
     "test:unit": "jest test/unit --coverage",
     "test:cli": "jest test/cli",
