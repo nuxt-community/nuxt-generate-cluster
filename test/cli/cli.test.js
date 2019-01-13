@@ -20,7 +20,6 @@ describe('cli', () => {
       console.log(binGenerate, fs.existsSync(binGenerate))
       const nuxtGenerate = spawn(binNyc, [
         '--reporter', 'none',
-        'node',
         binGenerate, '-b', rootDir, '-w', '2', '-v'
       ], {
         env: {
