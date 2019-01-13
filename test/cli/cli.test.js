@@ -14,7 +14,9 @@ describe('cli', () => {
       // -v offsets from default log level, not current level
       // hence one -v is enough
       const binGenerate = path.resolve(__dirname, '..', '..', 'bin', 'nuxt-generate')
-      const nuxtGenerate = spawn('node_modules/.bin/nyc', [
+      const binNyc = path.resolve(__dirname, '..', '..', 'node_modules', '.bin', 'nyc')
+
+      const nuxtGenerate = spawn(binNyc, [
         '--reporter', 'none',
         'node',
         binGenerate, '-b', rootDir, '-w', '2', '-v'
@@ -32,7 +34,7 @@ describe('cli', () => {
       })
     })
 
-    expect(error).toBe(undefined)
+    expect(error).toBeUndefined()
     expect(stdout).toContain('Nuxt files generated')
     expect(stdout).toContain('worker 1 started')
     expect(stdout).toContain('worker 2 started')
