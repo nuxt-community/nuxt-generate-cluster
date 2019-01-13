@@ -21,7 +21,7 @@ describe('cli', () => {
       const nuxtGenerate = spawn(binNyc, [
         '--reporter', 'none',
         binGenerate, '-b', rootDir, '-w', '2', '-v'
-      ], {env })
+      ], { env })
 
       nuxtGenerate.stdout.on('data', (data) => { stdout += data.toString() })
       nuxtGenerate.stderr.on('data', (data) => { stderr += data.toString() })
