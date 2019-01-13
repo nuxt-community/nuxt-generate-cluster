@@ -25,6 +25,7 @@ describe('async generate', () => {
       workerCount: 2
     })
 
+    await master.init()
     generator = master.generator
     builder = generator.builder
 

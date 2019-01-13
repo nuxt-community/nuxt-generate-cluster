@@ -2,8 +2,7 @@
   "name": "nuxt-generate-cluster",
   "version": "2.3.1",
   "description": "Multi-threaded generate for nuxt using cluster",
-  "main": "index.js",
-  "module": "./lib/index.js",
+  "main": "./index.js",
   "scripts": {
     "build": "rollup -c build/rollup.config.js",
     "coverage": "codecov",
@@ -86,9 +85,7 @@
     "request-promise-native": "^1.0.5",
     "rimraf": "^2.6.3",
     "rollup": "^1.1.0",
-    "rollup-plugin-babel": "^4.3.0",
     "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-license": "^0.7.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "standard-version": "^4.4.0"
   }

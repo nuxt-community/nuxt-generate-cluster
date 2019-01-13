@@ -28,6 +28,7 @@ describe('cluster generate', () => {
         exec: resolve(__dirname, '..', 'utils', 'cluster.worker.js')
       }
     })
+    await master.init()
 
     generator = master.generator
     builder = generator.builder

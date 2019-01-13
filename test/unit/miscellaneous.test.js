@@ -7,14 +7,14 @@ describe('miscellaneous', () => {
     jest.clearAllMocks()
   })
 
-  test('generate.master does not call build', () => {
+  test('generate.master does not call build', async () => {
     const master = new Generate.Master({}, {})
     master.getRoutes = () => { return [] }
     master.build = jest.fn()
     master.initiate = jest.fn()
     master.startWorkers = jest.fn()
 
-    master.run({ build: false })
+    await master.run({ build: false })
 
     expect(master.build).not.toHaveBeenCalled()
     expect(master.initiate).toHaveBeenCalled()
@@ -27,6 +27,7 @@ describe('miscellaneous', () => {
     const master = new Generate.Master({
       generate: { done }
     }, {})
+    await master.init()
     master.generator.afterGenerate = jest.fn()
     master.initiate = jest.fn()
 
@@ -37,6 +38,7 @@ describe('miscellaneous', () => {
 
   test('generate.master.getRoutes fails on exception in generator', async () => {
     const master = new Generate.Master({}, {})
+    await master.init()
     master.generator.initRoutes = () => {
       throw new Error('Error')
     }
@@ -52,6 +54,7 @@ describe('miscellaneous', () => {
 
   test('generate.worker.generateRoutes fails on exception in generator', async () => {
     const worker = new Generate.Worker({}, {})
+    await worker.init()
     worker.generator.generateRoutes = () => {
       throw new Error('Oopsy')
     }

@@ -31,17 +31,17 @@ describe('cluster worker', () => {
     worker.generator.nuxt.hook('generate:routeCreated', spy)
     await worker.generateRoutes(routes)
     expect(consola.cluster).toHaveBeenCalledWith(`received ${routesLength} routes`)
-    expect(consola.worker).toHaveBeenCalledTimes(routesLength - consola.error.mock.calls.length)
+    expect(consola.success).toHaveBeenCalledTimes(routesLength - consola.error.mock.calls.length)
   })
 
   test('calculates duration on level >4', async () => {
-    consola._level = 4
+    consola.level = 4
     jest.unmock('consola')
 
     const ccluster = jest.fn()
     const cworker = jest.fn()
     consola.cluster = ccluster
-    consola.worker = cworker
+    consola.success = cworker
 
     let routes = worker.generator.nuxt.options.generate.routes
     routes = worker.generator.decorateWithPayloads([], routes)

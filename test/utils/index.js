@@ -13,7 +13,9 @@ import * as Generate from '../../lib/generate'
 import * as Mixins from '../../lib/mixins'
 import * as Reporters from '../../lib/utils/reporters'
 
-export { Nuxt, Builder, BundleBuilder, Generator } from '../../lib/utils/nuxt'
+export { Nuxt, Builder, Generator } from 'nuxt'
+
+export { BundleBuilder } from '@nuxt/webpack'
 
 export * from '../../lib/utils'
 

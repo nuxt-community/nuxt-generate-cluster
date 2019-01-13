@@ -15,7 +15,7 @@ describe('basic reporter', () => {
 
   // this test is not really a test
   test('nuxt success generated msg is ignored', () => {
-    reporter.superLog({
+    reporter.log({
       type: 'success',
       args: ['Generated TEST']
     })
@@ -30,6 +30,18 @@ describe('basic reporter', () => {
     })
 
     expect(messaging.send).toHaveBeenCalledTimes(1)
+  })
+
+  test('uses global ngc_log_tag', () => {
+    global._ngc_log_tag = 'test tag'
+
+    reporter.log({
+      type: 'debug',
+      args: ['Something']
+    })
+
+    expect(messaging.send).toHaveBeenCalledTimes(1)
+    expect(messaging.send.mock.calls[0][2].logObj.tag).toBe('test tag')
   })
 })
 
@@ -41,7 +53,7 @@ describe('fancy reporter', () => {
 
   // this test is not really a test
   test('nuxt success generated msg is ignored', () => {
-    reporter.superLog({
+    reporter.log({
       type: 'success',
       args: ['Generated TEST']
     })
@@ -56,5 +68,17 @@ describe('fancy reporter', () => {
     })
 
     expect(messaging.send).toHaveBeenCalledTimes(1)
+  })
+
+  test('uses global ngc_log_tag', () => {
+    global._ngc_log_tag = 'test tag'
+
+    reporter.log({
+      type: 'debug',
+      args: ['Something']
+    })
+
+    expect(messaging.send).toHaveBeenCalledTimes(1)
+    expect(messaging.send.mock.calls[0][2].logObj.tag).toBe('test tag')
   })
 })
