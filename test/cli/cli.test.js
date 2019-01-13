@@ -22,9 +22,7 @@ describe('cli', () => {
         '--reporter', 'none',
         binGenerate, '-b', rootDir, '-w', '2', '-v'
       ], {
-        env: {
-          NODE_ENV: 'test'
-        }
+        env: process.env
       })
 
       nuxtGenerate.stdout.on('data', (data) => { stdout += data.toString() })
