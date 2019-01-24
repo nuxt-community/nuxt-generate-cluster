@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.3"></a>
+## [2.3.3](https://github.com/nuxt-community/nuxt-generate-cluster/compare/v2.3.2...v2.3.3) (2019-01-24)
+
+
+### Bug Fixes
+
+* pass workerInfo to done method ([97df328](https://github.com/nuxt-community/nuxt-generate-cluster/commit/97df328)), closes [#15](https://github.com/nuxt-community/nuxt-generate-cluster/issues/15)
+
+
+
 <a name="2.3.2"></a>
 ## [2.3.2](https://github.com/nuxt-community/nuxt-generate-cluster/compare/v2.3.1...v2.3.2) (2019-01-13)
 
