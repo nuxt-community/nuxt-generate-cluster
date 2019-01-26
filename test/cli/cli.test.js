@@ -65,9 +65,9 @@ function runGenerate(fixtureName) {
     `--config-file=nuxt.config.js`,
     '-v'
   ]
-  const env = {
-    NODE_ENV: 'production'
-  }
+  const env = Object.assign(process.env, {
+    'NODE_ENV': 'production'
+  })
   const binGenerate = path.resolve(__dirname, '..', '..', 'bin', 'nuxt-generate')
   return execFile(binGenerate, args, { env })
 }
