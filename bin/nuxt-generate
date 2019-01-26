@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const cluster = require('cluster')
+const util = require('util')
 
 if (cluster.isMaster) {
   const meow = require('meow')
@@ -158,6 +159,18 @@ if (cluster.isMaster) {
         }
       })
       global.consola.error('==== Error report ==== \n' + report.join('\n\n'))
+    }
+
+    const workersWithErrors = Object.values(workerInfo).filter(i => i.code !== 0)
+    if (workersWithErrors.length > 0) {
+      global.consola.fatal(`${workersWithErrors.length} workers failed:\n${util.inspect(workersWithErrors)}`)
+      process.exit(1)
+    }
+
+    const unhandledErrors = errors.filter(e => e.type === 'unhandled')
+    if (unhandledErrors.length > 0) {
+      global.consola.fatal(`There were ${unhandledErrors.length} unhandled page rendering errors.`)
+      process.exit(1)
     }
   })
 
