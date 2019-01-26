@@ -8067,6 +8067,13 @@ promise@^7.0.1:
   dependencies:
     asap "~2.0.3"
 
+promisify-child-process@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/promisify-child-process/-/promisify-child-process-3.1.0.tgz#dbd9cf5978d24a921cfeed36c9cfd894ce77387b"
+  integrity sha512-qSXQUk7eci66DGQ62Joo5k8Li5x+WsloaM+oPPeKY549suS4ZIvi/qj2POsLlsG8a6RzBSZezvYHw75mcn7WmQ==
+  dependencies:
+    "@babel/runtime" "^7.1.5"
+
 prompts@^0.1.9:
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/prompts/-/prompts-0.1.14.tgz#a8e15c612c5c9ec8f8111847df3337c9cbd443b2"
