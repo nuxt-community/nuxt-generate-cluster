@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const cluster = require('cluster')
-const util = require('util')
 
 if (cluster.isMaster) {
   const meow = require('meow')
@@ -69,6 +68,7 @@ if (cluster.isMaster) {
 
   const resolve = require('path').resolve
   const existsSync = require('fs').existsSync
+  const util = require('util')
   const store = new (require('data-store'))('nuxt-generate-cluster')
 
   const rootDir = resolve(cli.input[0] || '.')
