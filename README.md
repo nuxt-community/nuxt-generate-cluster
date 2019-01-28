@@ -129,6 +129,7 @@ $ ./node_modules/.bin/nuxt-generate -h
                             (default: # cpus)
     -wc [NUM],            How many routes should be sent to 
     --worker-concurrency [NUM]    a worker per iteration
+    -f, --fail-on-error   Exit with code 1 if a page throws an unhandled error
 
 ```
 
