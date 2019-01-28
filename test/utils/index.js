@@ -99,9 +99,10 @@ export const equalOrStartsWith = function equalOrStartsWith(string1, string2) {
  * Run the CLI script to generate a given fixture, and return the CLI's output.
  *
  * @param {string} fixtureName
+ * @param {string[]} [extraArg]
  * @returns {{stdout: string, stderr: string, exitCode: number}}
  */
-export function runCliGenerate(fixtureName) {
+export function runCliGenerate(fixtureName, extraArg) {
   const rootDir = path.resolve(__dirname, '..', 'fixtures', fixtureName)
   // Nuxt sets log level to 0 for CI and env=TEST
   // -v offsets from default log level, not current level
@@ -113,6 +114,9 @@ export function runCliGenerate(fixtureName) {
     `--config-file=nuxt.config.js`,
     '-v'
   ]
+  if (extraArg) {
+    args.push(...extraArg)
+  }
   const env = Object.assign(process.env, {
     'NODE_ENV': 'production'
   })
