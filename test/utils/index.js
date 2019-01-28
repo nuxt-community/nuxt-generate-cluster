@@ -1,6 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import klawSync from 'klaw-sync'
+import spawn from 'cross-spawn'
 
 import _getPort from 'get-port'
 import { defaultsDeep, find } from 'lodash'
@@ -92,4 +93,34 @@ export const listPaths = function listPaths(dir, pathsBefore = [], options = {})
 
 export const equalOrStartsWith = function equalOrStartsWith(string1, string2) {
   return string1 === string2 || string2.startsWith(string1)
+}
+
+/**
+ * Run the CLI script to generate a given fixture, and return the CLI's output.
+ *
+ * @param {string} fixtureName
+ * @returns {{stdout: string, stderr: string, exitCode: number}}
+ */
+export function runCliGenerate(fixtureName) {
+  const rootDir = path.resolve(__dirname, '..', 'fixtures', fixtureName)
+  // Nuxt sets log level to 0 for CI and env=TEST
+  // -v offsets from default log level, not current level
+  // hence one -v is enough
+  const args = [
+    rootDir,
+    '--build',
+    '--workers=2',
+    `--config-file=nuxt.config.js`,
+    '-v'
+  ]
+  const env = Object.assign(process.env, {
+    'NODE_ENV': 'production'
+  })
+  const binGenerate = path.resolve(__dirname, '..', '..', 'bin', 'nuxt-generate')
+  const result = spawn.sync(binGenerate, args, { env })
+  return {
+    stdout: result.stdout.toString(),
+    stderr: result.stderr.toString(),
+    exitCode: result.status
+  }
 }
