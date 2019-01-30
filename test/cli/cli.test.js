@@ -22,7 +22,7 @@ describe('cli', () => {
     const result = await runCliGenerate('error-testing', ['--params=error=no-error'])
 
     expect(result.exitCode).toEqual(0)
-    expect(result.stdout).toContain('generated: ${path.sep}no-error${path.sep}index.html')
+    expect(result.stdout).toContain(`generated: ${path.sep}no-error${path.sep}index.html`)
     expect(result.stdout).toContain('worker 1 started')
     expect(result.stdout).not.toContain('worker 2 started')
     expect(result.stdout).toContain('worker 1 exited')
@@ -46,6 +46,12 @@ describe('cli', () => {
     const result = await runCliGenerate('error-testing', ['--params=error=kill-process'])
 
     expect(result.exitCode).toEqual(1)
-    expect(result.stderr).toContain('worker 1 exited by signal SIGTERM')
+
+    // windows doesnt really understand signals
+    if (process.platform === 'win32') {
+      expect(result.stderr).toContain('worker 1 exited with status code 1')
+    } else {
+      expect(result.stderr).toContain('worker 1 exited by signal SIGTERM')
+    }
   })
 })
