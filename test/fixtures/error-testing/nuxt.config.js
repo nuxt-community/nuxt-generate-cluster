@@ -6,7 +6,7 @@ export default {
   generate: {
     routes(callback, params) {
       const routes = [
-        `/error/${params.error}`
+        `/${params.error}`
       ]
       callback(null, routes)
     }

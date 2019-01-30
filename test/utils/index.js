@@ -100,7 +100,7 @@ export const equalOrStartsWith = function equalOrStartsWith(string1, string2) {
  *
  * @param {string} fixtureName
  * @param {string[]} [extraArg]
- * @returns {{stdout: string, stderr: string, exitCode: number}}
+ * @returns Promise {{stdout: string, stderr: string, exitCode: number}}
  */
 export function runCliGenerate(fixtureName, extraArg) {
   const rootDir = path.resolve(__dirname, '..', 'fixtures', fixtureName)
@@ -120,11 +120,21 @@ export function runCliGenerate(fixtureName, extraArg) {
   const env = Object.assign(process.env, {
     'NODE_ENV': 'production'
   })
-  const binGenerate = path.resolve(__dirname, '..', '..', 'bin', 'nuxt-generate')
-  const result = spawn.sync(binGenerate, args, { env })
-  return {
-    stdout: result.stdout.toString(),
-    stderr: result.stderr.toString(),
-    exitCode: result.status
-  }
+
+  const binGenerate = path.resolve(__dirname, '..', '..', 'bin', 'nuxt-generate.js')
+
+  return new Promise((resolve) => {
+    let stdout = ''
+    let stderr = ''
+    let error
+
+    const nuxtGenerate = spawn(binGenerate, args, { env })
+
+    nuxtGenerate.stdout.on('data', (data) => { stdout += data.toString() })
+    nuxtGenerate.stderr.on('data', (data) => { stderr += data.toString() })
+    nuxtGenerate.on('error', (err) => { error = err })
+    nuxtGenerate.on('close', (exitCode, signal) => {
+      resolve({ stdout, stderr, error, exitCode, signal })
+    })
+  })
 }

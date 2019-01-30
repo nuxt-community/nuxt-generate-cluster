@@ -2,8 +2,8 @@ import path from 'path'
 import { runCliGenerate } from '../utils'
 
 describe('cli', () => {
-  test('bin/nuxt-generate', () => {
-    const result = runCliGenerate('basic')
+  test('bin/nuxt-generate', async () => {
+    const result = await runCliGenerate('basic')
 
     expect(result.exitCode).toEqual(0)
     expect(result.stdout).toContain('Nuxt files generated')
@@ -18,35 +18,34 @@ describe('cli', () => {
     expect(result.stderr).toContain('==== Error report ====')
   })
 
-  test('bin/nuxt-generate: no error', () => {
-    const result = runCliGenerate('error-testing', ['--params=error=no-error'])
+  test('bin/nuxt-generate: no error', async () => {
+    const result = await runCliGenerate('error-testing', ['--params=error=no-error'])
 
     expect(result.exitCode).toEqual(0)
-    expect(result.stdout).toContain('generated: /error/no-error/index.html')
+    expect(result.stdout).toContain('generated: /no-error/index.html')
     expect(result.stdout).toContain('worker 1 started')
-    expect(result.stdout).toContain('worker 2 started')
+    expect(result.stdout).not.toContain('worker 2 started')
     expect(result.stdout).toContain('worker 1 exited')
-    expect(result.stdout).toContain('worker 2 exited')
     expect(result.stdout).toContain('HTML Files generated in')
   })
 
-  test('bin/nuxt-generate: unhandled error', () => {
-    const result = runCliGenerate('error-testing', ['--params=error=unhandled-error'])
+  test('bin/nuxt-generate: unhandled error', async () => {
+    const result = await runCliGenerate('error-testing', ['--params=error=unhandled-error'])
 
     expect(result.exitCode).toEqual(0)
   })
 
-  test('bin/nuxt-generate: unhandled error with --exit-on-unhandled', () => {
-    const result = runCliGenerate('error-testing', ['--params=error=unhandled-error', '--fail-on-error'])
+  test('bin/nuxt-generate: unhandled error with --fail-on-page-error', async () => {
+    const result = await runCliGenerate('error-testing', ['--params=error=unhandled-error', '--fail-on-page-error'])
 
     expect(result.exitCode).toEqual(1)
-    expect(result.stderr).toContain('There were 1 unhandled page rendering errors.')
+    expect(result.stderr).toContain('Unhandled page error occured for route /unhandled-error')
   })
 
-  test('bin/nuxt-generate: killed worker', () => {
-    const result = runCliGenerate('error-testing', ['--params=error=kill-process'])
+  test('bin/nuxt-generate: killed worker', async () => {
+    const result = await runCliGenerate('error-testing', ['--params=error=kill-process'])
 
     expect(result.exitCode).toEqual(1)
-    expect(result.stderr).toContain('1 workers failed')
+    expect(result.stderr).toContain('worker 1 exited by signal SIGABRT')
   })
 })

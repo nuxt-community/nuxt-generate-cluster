@@ -18,11 +18,11 @@ if (cluster.isMaster) {
                                 (should be a JSON string or queryString)
         -q, --quiet           Decrease verbosity (repeat to decrease more)
         -v, --verbose         Increase verbosity (repeat to increase more)
+        --fail-on-page-error  Immediately exit when a page throws an unhandled error
         -w, --workers [NUM]   How many workers should be started
                                 (default: # cpus)
         -wc [NUM],            How many routes should be sent to 
         --worker-concurrency [NUM]    a worker per iteration
-        -f, --fail-on-error   Exit with code 1 if a page throws an unhandled error
 
   `, {
     flags: {
@@ -64,17 +64,15 @@ if (cluster.isMaster) {
         default: false,
         alias: 'wc'
       },
-      'fail-on-error': {
+      'fail-on-page-error': {
         type: 'boolean',
-        default: false,
-        alias: 'f'
+        default: false
       }
     }
   })
 
   const resolve = require('path').resolve
   const existsSync = require('fs').existsSync
-  const util = require('util')
   const store = new (require('data-store'))('nuxt-generate-cluster')
 
   const rootDir = resolve(cli.input[0] || '.')
@@ -139,11 +137,26 @@ if (cluster.isMaster) {
 
   const { Master } = require('..')
 
+  // require consola after importing Master
+  const consola = require('consola')
+  consola.addReporter({
+    log(logObj) {
+      if (logObj.type === 'fatal') {
+        // Exit immediately on fatal error
+        // the error itself is already printed by the other reporter
+        // because logging happens sync and this reporter is added
+        // after the normal one
+        process.exit(1)
+      }
+    }
+  })
+
   storeTime('lastStarted')
   const master = new Master(options, {
     adjustLogLevel: countFlags('v') - countFlags('q'),
     workerCount: cli.flags.workers,
-    workerConcurrency: cli.flags.workerConcurrency
+    workerConcurrency: cli.flags.workerConcurrency,
+    failOnPageError: cli.flags.failOnPageError
   })
 
   master.hook('built', (params) => {
@@ -153,7 +166,7 @@ if (cluster.isMaster) {
   master.hook('done', ({ duration, errors, workerInfo }) => {
     storeTime('lastFinished')
 
-    global.consola.log(`HTML Files generated in ${duration}s`)
+    consola.log(`HTML Files generated in ${duration}s`)
 
     if (errors.length) {
       const report = errors.map(({ type, route, error }) => {
@@ -164,19 +177,7 @@ if (cluster.isMaster) {
           return `Route: '${route}' thrown an error: \n` + JSON.stringify(error)
         }
       })
-      global.consola.error('==== Error report ==== \n' + report.join('\n\n'))
-    }
-
-    const workersWithErrors = Object.values(workerInfo).filter(i => i.code !== 0)
-    if (workersWithErrors.length > 0) {
-      global.consola.fatal(`${workersWithErrors.length} workers failed:\n${util.inspect(workersWithErrors)}`)
-      process.exit(1)
-    }
-
-    const unhandledErrors = errors.filter(e => e.type === 'unhandled')
-    if (unhandledErrors.length > 0 && cli.flags.failOnError) {
-      global.consola.fatal(`There were ${unhandledErrors.length} unhandled page rendering errors.`)
-      process.exit(1)
+      consola.error('==== Error report ==== \n' + report.join('\n\n'))
     }
   })
 
@@ -184,9 +185,5 @@ if (cluster.isMaster) {
   master.run({ build: cli.flags.build, params })
 } else {
   const { Worker } = require('..')
-
-  const options = JSON.parse(process.env.options)
-
-  const worker = new Worker(options)
-  worker.run()
+  Worker.start()
 }

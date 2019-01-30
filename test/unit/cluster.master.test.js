@@ -21,7 +21,7 @@ describe('cluster master', () => {
   test('logs exit code', async () => {
     master.done = jest.fn()
     await master.onExit({ id: 123 }, 456, 789)
-    expect(consola.master).toHaveBeenCalledWith(expect.stringMatching('worker 123 exited with status code 456 by signal 789'))
+    expect(consola.fatal).toHaveBeenCalledWith(expect.stringMatching('worker 123 exited with status code 456 by signal 789'))
   })
 
   test('counts alive workers', async () => {

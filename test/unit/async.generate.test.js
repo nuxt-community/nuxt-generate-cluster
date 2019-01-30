@@ -55,6 +55,11 @@ describe('async generate', () => {
     server.listen(port)
   })
 
+  // Close server and ask nuxt to stop listening to file changes
+  afterAll(async () => {
+    await server.close()
+  })
+
   test('Check builder', () => {
     expect(builder.bundleBuilder.context.isStatic).toBe(true)
     expect(builder.build).toHaveBeenCalledTimes(1)
@@ -243,10 +248,5 @@ describe('async generate', () => {
         body: expect.stringContaining('Cannot GET /ignored.test')
       }
     })
-  })
-
-  // Close server and ask nuxt to stop listening to file changes
-  afterAll(async () => {
-    await server.close()
   })
 })

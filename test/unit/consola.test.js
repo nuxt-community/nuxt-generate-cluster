@@ -30,6 +30,6 @@ describe('consola', () => {
   // doesnt work
   test('uses fancy reporter by default', () => {
     expect(Object.keys(env).length).toBe(1)
-    expect(consola._reporters[0].constructor.name).toBe('Reporter')
+    expect(consola._reporters[0].constructor.name).toBe('FancyReporter')
   })
 })

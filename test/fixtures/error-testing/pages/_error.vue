@@ -9,6 +9,9 @@ export default {
       case 'kill-process':
         process.kill(process.pid, 'SIGABRT')
         break
+      case 'nonzero-exit':
+        process.exitCode = 1
+        break
       case 'unhandled-error':
         throw new Error('My unhandled error')
     }

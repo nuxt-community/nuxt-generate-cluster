@@ -22,6 +22,25 @@ describe('cluster worker', () => {
     jest.resetAllMocks()
   })
 
+  test('static start processes env and runs worker', () => {
+    const options = {
+      test: '123'
+    }
+    process.env.args = JSON.stringify({ options })
+
+    const workerRun = Cluster.Worker.prototype.run
+
+    const run = jest.fn()
+    Cluster.Worker.prototype.run = run
+
+    const worker = Cluster.Worker.start()
+
+    expect(run).toHaveBeenCalledTimes(1)
+    expect(worker.options.test).toBe(options.test)
+
+    Cluster.Worker.prototype.run = workerRun
+  })
+
   test('can generate routes', async () => {
     let routes = worker.generator.nuxt.options.generate.routes
     routes = worker.generator.decorateWithPayloads([], routes)
