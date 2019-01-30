@@ -7,7 +7,7 @@ export default {
   asyncData({ params }) {
     switch (params.error) {
       case 'kill-process':
-        process.kill(process.pid, 'SIGABRT')
+        process.kill(process.pid, 'SIGTERM')
         break
       case 'nonzero-exit':
         process.exitCode = 1
