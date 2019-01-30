@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.0"></a>
+# [2.4.0](https://github.com/nuxt-community/nuxt-generate-cluster/compare/v2.3.3...v2.4.0) (2019-01-30)
+
+
+### Bug Fixes
+
+* windows tests ([8a7f539](https://github.com/nuxt-community/nuxt-generate-cluster/commit/8a7f539))
+* windows tests 2 ([93aebad](https://github.com/nuxt-community/nuxt-generate-cluster/commit/93aebad))
+
+
+### Features
+
+* exit immediately when fatal error occurs ([e3a1176](https://github.com/nuxt-community/nuxt-generate-cluster/commit/e3a1176))
+
+
+
 <a name="2.3.3"></a>
 ## [2.3.3](https://github.com/nuxt-community/nuxt-generate-cluster/compare/v2.3.2...v2.3.3) (2019-01-24)
 
