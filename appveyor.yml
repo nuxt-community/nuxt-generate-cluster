@@ -6,9 +6,9 @@ cache:
   - 'node_modules -> yarn.lock'
   - '%LOCALAPPDATA%\\Yarn -> yarn.lock'
 
-build: off
+#build: off
 
-skip_branch_with_pr: true
+skip_branch_with_pr: false
 
 # Install scripts. (runs after repo cloning)
 install:
