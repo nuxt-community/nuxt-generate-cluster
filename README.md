@@ -125,11 +125,11 @@ $ ./node_modules/.bin/nuxt-generate -h
                             (should be a JSON string or queryString)
     -q, --quiet           Decrease verbosity (repeat to decrease more)
     -v, --verbose         Increase verbosity (repeat to increase more)
+    --fail-on-page-error  Immediately exit when a page throws an unhandled error
     -w, --workers [NUM]   How many workers should be started
                             (default: # cpus)
     -wc [NUM],            How many routes should be sent to 
     --worker-concurrency [NUM]    a worker per iteration
-    -f, --fail-on-error   Exit with code 1 if a page throws an unhandled error
 
 ```
 
