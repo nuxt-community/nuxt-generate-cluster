@@ -46,7 +46,6 @@
     "data-store": "^3.1.0",
     "lodash": "^4.17.11",
     "meow": "^5.0.0",
-    "nuxt": "^2.4.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
@@ -78,6 +77,7 @@
     "jest": "^24.0.0",
     "jsdom": "^13.2.0",
     "klaw-sync": "^6.0.0",
+    "nuxt": "^2.4.0",
     "nyc": "^13.1.0",
     "pug": "^2.0.3",
     "pug-plain-loader": "^1.0.0",
@@ -88,5 +88,8 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "standard-version": "^4.4.0"
+  },
+  "peerDependencies": {
+    "nuxt": "2.0.0 - 2.4.*"
   }
 }
