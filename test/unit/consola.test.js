@@ -1,10 +1,10 @@
 import consolaDefault from 'consola'
-import env from 'std-env'
 import { consola } from '../utils'
 
 jest.mock('std-env', () => {
   return {
-    minimalCLI: false
+    ci: false,
+    test: false
   }
 })
 
@@ -21,15 +21,14 @@ describe('consola', () => {
   })
 
   test('custom props should exists', () => {
-    ['_defaultLevel', '_maxLevel', 'cluster', 'master', 'cluster'].forEach((key) => {
-      expect(consola[key]).not.toBeUndefined()
+    ['cluster', 'master'].forEach((key) => {
+      expect(consola[key]).toBeDefined()
       expect(consolaDefault[key]).toBeUndefined()
     })
   })
 
   // doesnt work
   test('uses fancy reporter by default', () => {
-    expect(Object.keys(env).length).toBe(1)
-    expect(consola._reporters[0].constructor.name).toBe('FancyReporter')
+    expect(consola._reporters[0].constructor.name).toBe('BasicReporter')
   })
 })

@@ -7,6 +7,7 @@ export const buildFixture = function (fixture, callback, hooks = []) {
   test(`Build ${fixture}`, async () => {
     const config = await loadFixture(fixture)
     nuxt = new Nuxt(config)
+    await nuxt.ready()
 
     pathsBefore.root = listPaths(nuxt.options.rootDir)
     if (nuxt.options.rootDir !== nuxt.options.srcDir) {

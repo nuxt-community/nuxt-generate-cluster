@@ -19,6 +19,8 @@ export { Nuxt, Builder, Generator } from 'nuxt'
 export { BundleBuilder } from '@nuxt/webpack'
 
 export * from '../../lib/utils'
+import { consola } from '../../lib/utils'
+consola.mockTypes(() => jest.fn())
 
 export {
   Cluster,

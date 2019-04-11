@@ -60,7 +60,7 @@ describe('cluster generate', () => {
   })
 
   test('Check builder', () => {
-    expect(builder.bundleBuilder.context.isStatic).toBe(true)
+    expect(builder.bundleBuilder.buildContext.isStatic).toBe(true)
     expect(builder.build).toHaveBeenCalledTimes(1)
   })
 

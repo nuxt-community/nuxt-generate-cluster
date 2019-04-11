@@ -28,6 +28,10 @@ coverage
 *.iml
 .idea
 
+# Codelite
+.codelite
+*.workspace
+
 # OSX
 *.DS_Store
 .AppleDouble

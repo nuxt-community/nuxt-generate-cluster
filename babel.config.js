@@ -1,12 +1,9 @@
-{
+module.exports = {
   "env": {
     "test": {
       "presets": [
         ["@babel/preset-env", {
-          "targets": {
-            "node": "current"
-          },
-          "useBuiltIns": "usage"
+          "targets": { "node": "current" }
         }]
       ],
       "plugins": ["dynamic-import-node"]
