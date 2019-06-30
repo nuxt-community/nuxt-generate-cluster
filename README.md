@@ -12,7 +12,7 @@
 
 Install the package
 ```
-yarn add nuxt-generate-cluster`
+yarn add nuxt-generate-cluster
 ```
 
 Add a generate script to your `package.json`
