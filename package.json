@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "consola": "^2.5.8",
-    "data-store": "^3.1.0",
+    "data-store": "^4.0.3",
     "lodash": "^4.17.11",
     "meow": "^5.0.0",
     "uuid": "^3.3.2"
