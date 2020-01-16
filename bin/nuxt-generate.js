@@ -140,7 +140,7 @@ if (cluster.isMaster) {
   // require consola after importing Master
   const consola = require('consola')
   consola.addReporter({
-    log(logObj) {
+    log (logObj) {
       if (logObj.type === 'fatal') {
         // Exit immediately on fatal error
         // the error itself is already printed by the other reporter

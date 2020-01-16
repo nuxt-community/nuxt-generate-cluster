@@ -52,7 +52,7 @@ export const loadFixture = async function (fixture, overrides) {
   return defaultsDeep({}, overrides, config)
 }
 
-export const waitFor = function waitFor(ms) {
+export const waitFor = function waitFor (ms) {
   return new Promise(resolve => setTimeout(resolve, ms || 0))
 }
 
@@ -64,7 +64,7 @@ export const waitFor = function waitFor(ms) {
  *
  * @returns {Boolean} true: timeout, false: condition becomes true within total time
  */
-export const waitUntil = async function waitUntil(condition, duration = 20, interval = 250) {
+export const waitUntil = async function waitUntil (condition, duration = 20, interval = 250) {
   let iterator = 0
   const steps = Math.floor(duration * 1000 / interval)
 
@@ -79,7 +79,7 @@ export const waitUntil = async function waitUntil(condition, duration = 20, inte
   return false
 }
 
-export const listPaths = function listPaths(dir, pathsBefore = [], options = {}) {
+export const listPaths = function listPaths (dir, pathsBefore = [], options = {}) {
   if (Array.isArray(pathsBefore) && pathsBefore.length) {
     // only return files that didn't exist before building
     // and files that have been changed
@@ -95,7 +95,7 @@ export const listPaths = function listPaths(dir, pathsBefore = [], options = {})
   return klawSync(dir, options)
 }
 
-export const equalOrStartsWith = function equalOrStartsWith(string1, string2) {
+export const equalOrStartsWith = function equalOrStartsWith (string1, string2) {
   return string1 === string2 || string2.startsWith(string1)
 }
 
@@ -106,7 +106,7 @@ export const equalOrStartsWith = function equalOrStartsWith(string1, string2) {
  * @param {string[]} [extraArg]
  * @returns Promise {{stdout: string, stderr: string, exitCode: number}}
  */
-export function runCliGenerate(fixtureName, extraArg) {
+export function runCliGenerate (fixtureName, extraArg) {
   const rootDir = path.resolve(__dirname, '..', 'fixtures', fixtureName)
   // Nuxt sets log level to 0 for CI and env=TEST
   // -v offsets from default log level, not current level
@@ -115,14 +115,14 @@ export function runCliGenerate(fixtureName, extraArg) {
     rootDir,
     '--build',
     '--workers=2',
-    `--config-file=nuxt.config.js`,
+    '--config-file=nuxt.config.js',
     '-v'
   ]
   if (extraArg) {
     args.push(...extraArg)
   }
   const env = Object.assign(process.env, {
-    'NODE_ENV': 'production'
+    NODE_ENV: 'production'
   })
 
   const binGenerate = path.resolve(__dirname, '..', '..', 'bin', 'nuxt-generate.js')

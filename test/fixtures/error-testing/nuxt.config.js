@@ -4,7 +4,7 @@ export default {
   modulesDir: path.join(__dirname, '..', '..', '..', 'node_modules'),
 
   generate: {
-    routes(callback, params) {
+    routes (callback, params) {
       const routes = [
         `/${params.error}`
       ]
