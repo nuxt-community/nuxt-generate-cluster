@@ -36,6 +36,21 @@ describe('miscellaneous', () => {
     expect(done).toHaveBeenCalled()
   })
 
+  test('generate.master beforeWorkers', async () => {
+    const beforeWorkers = jest.fn()
+    const master = new Generate.Master({
+      generate: { beforeWorkers }
+    }, {})
+    master.routes = ['/route']
+    master.build = jest.fn()
+    master.initiate = jest.fn()
+    master.startWorkers = jest.fn()
+
+    await master.run()
+
+    expect(beforeWorkers).toHaveBeenCalled()
+  })
+
   test('generate.master.getRoutes fails on exception in generator', async () => {
     const master = new Generate.Master({}, {})
     await master.init()
