@@ -4,7 +4,7 @@
 <a href="https://codecov.io/gh/nuxt-community/nuxt-generate-cluster"><img src="https://img.shields.io/codecov/c/github/nuxt-community/nuxt-generate-cluster/master.svg" alt="Coverage Status"></a>
 [![npm](https://img.shields.io/npm/dt/nuxt-generate-cluster.svg)](https://www.npmjs.com/package/nuxt-generate-cluster)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/nuxt-generate-cluster/latest.svg)](https://www.npmjs.com/package/nuxt-generate-cluster)
-<a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-v2.6-800080.svg" alt=""/></a>
+<a href="https://github.com/nuxt/nuxt.js/"><img src="https://img.shields.io/badge/nuxt.js-v2.11-800080.svg" alt=""/></a>
 
 > Use multiple workers to generate the static files for your Nuxt.js project
 
@@ -76,8 +76,8 @@ This method is called on the master just before the workers are started/forked. 
 
 Use this method if you experience serialization issues or when your Nuxt config is too big. The Nuxt options are stringified and then passed as environment variable to the workers, on Windows there seems to be a maximum size of 32KB for env variables.
 
-Properties which should be safe to remove are:
-- buildModules
+Properties which should be safe to remove are (not a complete list):
+- buildModules (and their options)
 - serverMiddleware
 
 ### `done`
