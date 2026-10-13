@@ -1,3 +1,6 @@
+> [!NOTE]
+> This repository is archived. `nuxt-generate-cluster` was built for Nuxt 2, which reached end of life on June 30, 2024.
+
 # Multi-threaded generate command for Nuxt.js
 <a href="https://travis-ci.org/nuxt-community/nuxt-generate-cluster"><img src="https://api.travis-ci.org/nuxt-community/nuxt-generate-cluster.svg" alt="Build Status"></a>
 <a href="https://ci.appveyor.com/project/pimlie/nuxt-generate-cluster"><img src="https://ci.appveyor.com/api/projects/status/elyk3f85sn2pr9r3?svg=true" alt="Windows Build Status"></a>
